@@ -13,6 +13,7 @@
       --tile-border:#cfd8dc;
       --accent:#00C1D4;
       --text:#1f2d3d;
+      --ring:#d7e6ee;
     }
     *{box-sizing:border-box;}
     body{
@@ -34,34 +35,21 @@
       z-index:10;
       border-bottom:4px solid var(--brand-blue);
     }
-    header .left{
-      display:flex;align-items:center;gap:12px;
-    }
+    header .left{display:flex;align-items:center;gap:12px;}
     header .logo{
-      width:36px;height:36px;
-      border-radius:6px;
+      width:36px;height:36px;border-radius:6px;
       background:var(--brand-blue);
       display:flex;align-items:center;justify-content:center;
       font-weight:700;color:#fff;
     }
-    header h1{
-      font-size:18px;margin:0;line-height:1.2;
-    }
+    header h1{font-size:18px;margin:0;line-height:1.2;}
     header a.home{
       color:#cfe8f3;text-decoration:none;font-weight:600;
       padding:8px 12px;border:1px solid #2d6d8a;border-radius:8px;
       background:#084861;
     }
-    main{
-      display:grid;
-      grid-template-columns: 1fr 320px;
-      gap:16px;
-      padding:16px;
-      max-width:1200px;margin:0 auto;
-    }
-    @media (max-width:960px){
-      main{grid-template-columns:1fr;}
-    }
+
+    main{padding:16px;max-width:1200px;margin:0 auto;}
 
     /* Board */
     .board-wrapper{
@@ -78,7 +66,7 @@
       display:grid;
       grid-template-columns:repeat(11, 1fr);
       grid-template-rows:repeat(11, 1fr);
-      position:relative;
+      position:relative; /* Anchor overlay */
       background:radial-gradient(circle at 50% 50%, #f8fbfd 0%, #ffffff 60%);
       border-radius:8px;
       overflow:hidden;
@@ -92,6 +80,7 @@
       position:relative; /* Anchor token */
       border-radius:6px;
       box-shadow:0 1px 2px rgba(0,0,0,0.04);
+      z-index:1;
     }
     .tile.corner{
       background:#f9fcff;
@@ -120,29 +109,40 @@
       border:2px solid #fff;
       box-shadow:0 2px 6px rgba(0,0,0,0.2);
       position:absolute;
-      top:50%;
-      left:50%;
-      transform:translate(-50%, -50%);
+      top:50%;left:50%;transform:translate(-50%, -50%);
       pointer-events:none;
+      z-index:2;
     }
 
-    /* Sidebar */
-    .sidebar{
-      background:#fff;
-      border:2px solid var(--tile-border);
-      border-radius:12px;
-      padding:16px;
-      box-shadow:0 6px 20px rgba(0,0,0,0.08);
+    /* Centered overlay HUD */
+    .overlay{
+      position:absolute;inset:0;
+      display:grid;place-items:center;
+      z-index:5;
+    }
+    .hud{
+      width:min(92%, 420px);
       display:flex;flex-direction:column;gap:12px;
+      background:#ffffffcc; /* slightly translucent */
+      backdrop-filter:saturate(135%) blur(2px);
+      border:1px solid var(--ring);
+      border-radius:14px;
+      padding:14px;
+      box-shadow:0 8px 28px rgba(0,0,0,0.15);
     }
     .panel{
       border:1px solid var(--tile-border);
-      border-radius:8px;
+      border-radius:10px;
       padding:12px;
       background:#fcfdff;
     }
+    .banner{
+      font-size:13px;color:#274b5a;background:#eaf6fb;
+      padding:8px;border-radius:8px;border:1px dashed var(--brand-blue);
+    }
     .controls{
       display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+      margin-bottom:8px;
     }
     button{
       appearance:none;border:none;border-radius:8px;
@@ -153,26 +153,12 @@
     }
     button.secondary{background:#eceff1;color:#333;}
     button:disabled{opacity:.6;cursor:not-allowed;}
-    .stat{
-      display:flex;justify-content:space-between;
-      font-size:14px;margin:6px 0;
-    }
-    .dice-face{
-      font-size:28px;line-height:1;
-    }
-    .activity h3{
-      margin:0 0 8px 0;font-size:16px;
-    }
-    .activity p{
-      margin:0 0 8px 0;font-size:14px;color:#455a64;
-    }
-    .activity a{
-      color:#0b7285;text-decoration:none;font-weight:600;
-    }
-    .banner{
-      font-size:13px;color:#274b5a;background:#eaf6fb;
-      padding:8px;border-radius:6px;border:1px dashed var(--brand-blue);
-    }
+    .dice-face{font-size:28px;line-height:1;}
+    .stat{display:flex;justify-content:space-between;font-size:14px;margin:6px 0;}
+    .activity h3{margin:0 0 8px 0;font-size:16px;}
+    .activity p{margin:0 0 8px 0;font-size:14px;color:#455a64;}
+    .activity a{color:#0b7285;text-decoration:none;font-weight:600;}
+
     footer{
       padding:12px 16px;color:#68808e;font-size:12px;text-align:center;
     }
@@ -189,31 +175,35 @@
 
   <main>
     <section class="board-wrapper">
-      <div id="board" class="board" aria-label="Monopoly-style board"></div>
-    </section>
-
-    <aside class="sidebar">
-      <div class="panel banner">
-        Theme: AI for Everyone. Roll the dice and complete one lap to finish the game.
-      </div>
-      <div class="panel">
-        <div class="controls">
-          <button id="rollBtn" aria-label="Roll the dice">Roll Dice</button>
-          <button id="resetBtn" class="secondary" aria-label="Reset the game">Reset</button>
-          <div id="diceFace" class="dice-face" aria-live="polite" title="Dice result">–</div>
+      <div id="board" class="board" aria-label="Monopoly-style board">
+        <!-- Centered overlay with controls and activity -->
+        <div class="overlay">
+          <div class="hud">
+            <div class="panel banner">
+              Theme: AI for Everyone. Roll the dice and complete one lap to finish the game.
+            </div>
+            <div class="panel">
+              <div class="controls">
+                <button id="rollBtn" aria-label="Roll the dice">Roll Dice</button>
+                <button id="resetBtn" class="secondary" aria-label="Reset the game">Reset</button>
+                <div id="diceFace" class="dice-face" aria-live="polite" title="Dice result">–</div>
+              </div>
+              <div class="stat"><span>Position:</span><strong id="pos">0 (Go)</strong></div>
+              <div class="stat"><span>Moves:</span><strong id="moves">0</strong></div>
+              <div class="stat"><span>Status:</span><strong id="status">Ready.</strong></div>
+            </div>
+            <div class="panel activity">
+              <h3 id="activityTitle">Welcome to the board.</h3>
+              <p id="activityText">Roll to begin your journey. Each space reveals a fact or a link.</p>
+              <p id="activityLinkWrap" style="display:none;">
+                Link: <a id="activityLink" href="#" target="_blank" rel="noopener">Open resource.</a>
+              </p>
+            </div>
+          </div>
         </div>
-        <div class="stat"><span>Position:</span><strong id="pos">0 (Go)</strong></div>
-        <div class="stat"><span>Moves:</span><strong id="moves">0</strong></div>
-        <div class="stat"><span>Status:</span><strong id="status">Ready.</strong></div>
+        <!-- Tiles render behind this overlay -->
       </div>
-      <div class="panel activity">
-        <h3 id="activityTitle">Welcome to the board.</h3>
-        <p id="activityText">Roll to begin your journey. Each space reveals a fact or a link.</p>
-        <p id="activityLinkWrap" style="display:none;">
-          Link: <a id="activityLink" href="#" target="_blank" rel="noopener">Open resource.</a>
-        </p>
-      </div>
-    </aside>
+    </section>
   </main>
 
   <footer>
