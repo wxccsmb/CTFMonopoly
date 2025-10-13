@@ -6,12 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     :root{
-      --brand-blue:#1BA0D7;        /* Replace with official Cisco brand blue if desired. */
-      --brand-dark:#003A5D;        /* Dark accent. */
-      --brand-light:#E6F4FA;       /* Light background accent. */
+      --brand-blue:#1BA0D7;
+      --brand-dark:#003A5D;
+      --brand-light:#E6F4FA;
       --tile-bg:#ffffff;
       --tile-border:#cfd8dc;
-      --accent:#00C1D4;            /* Secondary accent. */
+      --accent:#00C1D4;
       --text:#1f2d3d;
     }
     *{box-sizing:border-box;}
@@ -61,6 +61,7 @@
       border-radius:12px;
       padding:16px;
       box-shadow:0 6px 20px rgba(0,0,0,0.08);
+      overflow:hidden; /* Ensure nothing appears outside the wrapper */
     }
     .board{
       width:100%;
@@ -71,6 +72,7 @@
       position:relative;
       background:radial-gradient(circle at 50% 50%, #f8fbfd 0%, #ffffff 60%);
       border-radius:8px;
+      overflow:hidden; /* Extra safety to keep token inside board */
     }
     .tile{
       background:var(--tile-bg);
@@ -78,7 +80,7 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      position:relative;
+      position:relative; /* Anchor absolute token inside each tile */
       border-radius:6px;
       box-shadow:0 1px 2px rgba(0,0,0,0.04);
     }
@@ -101,17 +103,19 @@
       background:linear-gradient(135deg,#fff 0%, #e8f8ff 50%, #d1f4ff 100%);
       border:2px solid var(--accent);
     }
-.token{
-  width:20px;height:20px;border-radius:50%;
-  background:var(--brand-blue);
-  border:2px solid #fff;
-  box-shadow:0 2px 6px rgba(0,0,0,0.2);
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -50%);
-  pointer-events:none;
-}
+
+    /* Token centered inside tile without pixel math */
+    .token{
+      width:20px;height:20px;border-radius:50%;
+      background:var(--brand-blue);
+      border:2px solid #fff;
+      box-shadow:0 2px 6px rgba(0,0,0,0.2);
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%);
+      pointer-events:none;
+    }
 
     /* Sidebar */
     .sidebar{
@@ -207,7 +211,6 @@
   <script>
     // Board and game config
     const BOARD_SIZE = 40;
-    const GRID = 11; // 11x11 grid border yields 40 tiles.
     const boardEl = document.getElementById('board');
     const rollBtn = document.getElementById('rollBtn');
     const resetBtn = document.getElementById('resetBtn');
@@ -223,8 +226,7 @@
 
     const diceFaces = ['⚀','⚁','⚂','⚃','⚄','⚅'];
 
-    // Activities: mix of facts and links (customize freely).
-    // type: 'fact' or 'link'
+    // Activities
     const activities = [
       {type:'fact', title:'Welcome to Go.', text:'Start here. Complete one lap to finish the game.'},
       {type:'link', title:'Cisco Homepage.', url:'https://www.cisco.com/'},
@@ -265,34 +267,28 @@
       {type:'link', title:'US Digital Services Playbook.', url:'https://playbook.cio.gov/'},
       {type:'fact', title:'Deployment.', text:'Monitor models after deployment to catch drift.'},
       {type:'fact', title:'Evaluation.', text:'Evaluate with representative datasets and scenarios.'},
-      {type:'link', title:'Cisco – Add Your AI Page URL.', url:'#'}, // Replace with official Cisco AI page URL.
+      {type:'link', title:'Cisco – Add Your AI Page URL.', url:'#'},
       {type:'fact', title:'Pass Go.', text:'Crossing Go completes your lap. Great job!'}
     ];
 
-    // Derived tile names (short labels for display)
+    // Derived tile names
     function tileName(i){
       const item = activities[i];
       if(!item) return 'Tile';
-      if(item.type === 'link') return item.title.replace(/\.$/, '');
-      if(item.type === 'fact') return item.title.replace(/\.$/, '');
-      return 'Tile';
+      return (item.title || 'Tile').replace(/\.$/, '');
     }
 
     // Map index [0..39] to 11x11 grid border coordinates
     function indexToGrid(i){
       if(i < 0 || i >= BOARD_SIZE) throw new Error('Index out of range');
       if(i <= 10){
-        // Bottom row: 10..0 cols at row 10
-        return {row:10, col:10 - i};
+        return {row:10, col:10 - i};      // Bottom row
       } else if(i <= 20){
-        // Left col: rows 9..0 at col 0
-        return {row:20 - i, col:0};
+        return {row:20 - i, col:0};       // Left column
       } else if(i <= 30){
-        // Top row: cols 1..10 at row 0
-        return {row:0, col:i - 20};
+        return {row:0, col:i - 20};       // Top row
       } else {
-        // Right col: rows 1..10 at col 10
-        return {row:i - 30, col:10};
+        return {row:i - 30, col:10};      // Right column
       }
     }
 
@@ -335,14 +331,17 @@
     let moves = 0;
     let finished = false;
 
-function placeToken(index){
-  const tile = tiles[index];
-  if(!tile) return;
-  tile.appendChild(token);
-  // Center via CSS; no manual measurements needed.
-  token.style.left = '50%';
-  token.style.top = '50%';
-}
+    function placeToken(index){
+      const tile = tiles[index];
+      if(!tile) return;
+      // Append to the current tile; CSS keeps it centered.
+      if(token.parentElement !== tile){
+        tile.appendChild(token);
+      } else {
+        // Force reflow-free placement in case of rapid moves.
+        tile.appendChild(token);
+      }
+    }
 
     function updateHUD(){
       posEl.textContent = position === 0 ? '0 (Go)' : position.toString();
@@ -403,18 +402,16 @@ function placeToken(index){
       rollBtn.disabled = true;
       showStatus('Rolling…');
       const n = rollDice();
+      const startPos = position;
       await animateMove(n);
       moves++;
       updateHUD();
 
-      // Check pass Go: if we wrapped around (new position < previous start)
-      // Since we moved n steps, compare by detecting wrap during animation or:
-      // compute end < start -> crossed Go
-      const crossedGo = (position < ((position - n + BOARD_SIZE) % BOARD_SIZE));
+      const crossedGo = position < startPos;
       if(crossedGo){
         finished = true;
         showStatus('You passed Go. Game complete!');
-        showActivity(0); // Show Go tile activity
+        showActivity(0);
         rollBtn.disabled = true;
       } else {
         showStatus('Landed on tile ' + position + '.');
@@ -445,16 +442,7 @@ function placeToken(index){
     rollBtn.addEventListener('click', handleRoll);
     resetBtn.addEventListener('click', resetGame);
 
-    // Accessibility: keyboard roll (R), reset (Shift+R)
-    document.addEventListener('keydown', (e)=>{
-      if(e.key.toLowerCase() === 'r' && !e.shiftKey){
-        if(!rollBtn.disabled) handleRoll();
-      } else if(e.key.toLowerCase() === 'r' && e.shiftKey){
-        resetGame();
-      }
-    });
-
-
+    // No pixel math or resize handlers needed; token remains centered inside the tile.
   </script>
 </body>
 </html>
