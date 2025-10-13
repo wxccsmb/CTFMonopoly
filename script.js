@@ -94,7 +94,7 @@ function createBoardSpaces() {
     }
 
     // Add space number and insight preview
-    space.innerHTML = `<div>Space ${i}</div><small>${ciscoInsights[i].substring(0, 20)}...</small>`;
+    space.innerHTML = `<div>Space ${i}</div><small>${ciscoInsights[i] ? ciscoInsights[i].substring(0, 20) : ''}...</small>`;
 
     // Position in grid
     space.style.gridRowStart = row + 1;
