@@ -2,24 +2,148 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cisco Live Amsterdam 2026 - Monopoly Capture the Flag</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI for Everyone Monopoly — Cisco Amsterdam 2026 CTF</title>
+  <link rel="stylesheet" href="styles.css" />
+  <meta name="description" content="Single-player, web-based AI learning game with Cisco-related facts and capture-the-flag challenge."/>
 </head>
 <body>
-  <h1>Cisco Live Amsterdam 2026 - Monopoly Capture the Flag</h1>
-  <div id="game-container">
-    <div id="board"></div>
-    <div id="controls">
-      <button id="rollDiceBtn">Roll Dice</button>
-      <p>Dice Roll: <span id="diceResult">-</span></p>
-      <p>Current Position: <span id="playerPosition">0</span></p>
-      <div id="insightBox">
-        <h2>Insight / Challenge </h2>
-        <p id="insightText">Roll the dice to start!</p>
+  <header class="app-header">
+    <div class="brand">
+      <span class="logo">🎲</span>
+      <div class="title-wrap">
+        <h1>AI for Everyone — Monopoly</h1>
+        <p class="subtitle">Cisco Amsterdam 2026 — Capture the Flag</p>
+      </div>
+    </div>
+    <nav class="top-nav">
+      <button class="nav-btn" data-nav="home" aria-label="Home">Home</button>
+      <button class="nav-btn" data-nav="howto" aria-label="How To Play">How To Play</button>
+      <button class="nav-btn" data-nav="game" aria-label="Game">Game</button>
+      <button class="nav-btn" data-nav="about" aria-label="About">About</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Home Screen -->
+    <section id="home" class="screen active" aria-label="Home">
+      <div class="screen-inner">
+        <h2>Welcome to AI for Everyone</h2>
+        <p>Roll the dice, move around the board, unlock Cisco-related AI facts, and collect badges to reveal the final flag.</p>
+        <ul class="feature-list">
+          <li>Animated dice and smooth token movement.</li>
+          <li>Short, educational AI facts tied to Cisco technologies.</li>
+          <li>Quick challenges to earn badges.</li>
+          <li>Collect enough badges to reveal the flag!</li>
+        </ul>
+        <div class="cta-row">
+          <button class="primary" data-nav="howto">Get Started</button>
+          <button class="secondary" data-nav="about">Learn More</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- How To Play Screen -->
+    <section id="howto" class="screen" aria-label="How To Play">
+      <div class="screen-inner">
+        <h2>How To Play</h2>
+        <ol class="steps">
+          <li>Press "Play" to enter the game board.</li>
+          <li>Click "Roll" to animate the dice and move your token.</li>
+          <li>Land on spaces to view short AI facts and answer a quick challenge.</li>
+          <li>Earn badges for correct answers. Collect enough to reveal the flag.</li>
+          <li>Use the nav bar to switch screens anytime.</li>
+        </ol>
+        <p class="note">Tip: Your progress is saved locally. You can reset progress from the Game screen.</p>
+        <div class="cta-row">
+          <button class="primary" data-nav="game">Play</button>
+          <button class="secondary" data-nav="home">Back</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Game Screen -->
+    <section id="game" class="screen" aria-label="Game">
+      <div class="screen-inner">
+        <div class="hud">
+          <div class="hud-left">
+            <span class="pill">Player: <strong id="playerName">Solo</strong></span>
+            <span class="pill">Position: <strong id="posLabel">0</strong></span>
+            <span class="pill">Badges: <strong id="badgeCount">0</strong>/<span id="badgeGoal">8</span></span>
+          </div>
+          <div class="hud-right">
+            <button id="resetBtn" class="secondary small">Reset Progress</button>
+          </div>
+        </div>
+
+        <div class="board-wrap">
+          <div id="board" class="board" aria-label="Board"></div>
+          <div id="token" class="token" role="img" aria-label="Token"></div>
+        </div>
+
+        <div class="controls">
+          <div class="dice" id="dice" aria-label="Dice" title="Click Roll to animate">
+            <span id="diceFace">⚀</span>
+          </div>
+          <button id="rollBtn" class="primary">Roll</button>
+          <button id="hintBtn" class="secondary">Hint</button>
+        </div>
+
+        <div class="progress">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width:0%"></div>
+          </div>
+          <div class="flag-area" id="flagArea" aria-live="polite" aria-atomic="true">
+            <p class="flag-hidden">Collect badges to reveal the flag.</p>
+          </div>
+        </div>
+
+        <div class="log" id="log" aria-live="polite" aria-atomic="true"></div>
+      </div>
+    </section>
+
+    <!-- About Screen -->
+    <section id="about" class="screen" aria-label="About">
+      <div class="screen-inner">
+        <h2>About This Demo</h2>
+        <p>This is a single-player, web-hosted demo inspired by the Monopoly board game, themed "AI for Everyone." It presents short, Cisco-related AI facts and simple challenges designed for a capture-the-flag activity at Cisco Amsterdam 2026.</p>
+        <ul class="feature-list">
+          <li>Pure client-side HTML, CSS, and JavaScript.</li>
+          <li>No frameworks, no build step.</li>
+          <li>Ready for GitHub Pages hosting.</li>
+        </ul>
+        <p>Credits: Concept and code scaffolding for educational purposes.</p>
+        <div class="cta-row">
+          <button class="secondary" data-nav="home">Back</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Fact Modal -->
+  <div id="modal" class="modal" aria-hidden="true" role="dialog" aria-label="Fact and Challenge">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalTitle">Space</h3>
+        <button id="modalClose" class="icon-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p id="modalFact" class="fact"></p>
+        <div id="modalQuiz" class="quiz">
+          <p class="quiz-q" id="quizQuestion"></p>
+          <div id="quizOptions" class="quiz-options"></div>
+        </div>
+        <div id="modalResult" class="modal-result"></div>
+      </div>
+      <div class="modal-footer">
+        <button id="modalContinue" class="primary">Continue</button>
       </div>
     </div>
   </div>
+
+  <footer class="app-footer">
+    <p>© 2026 Cisco — AI for Everyone Demo. Educational content only.</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>
