@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Cisco AI for Everyone CTF</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root{
+      --brand-blue:#1BA0D7;
+      --brand-dark:#003A5D;
+      --brand-light:#E6F4FA;
+      --tile-bg:#ffffff;
+      --tile-border:#cfd8dc;
+      --accent:#00C1D4;
+      --text:#1f2d3d;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      color:var(--text);
+      background:linear-gradient(180deg,var(--brand-light),#fff);
+    }
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:16px 20px;
+      background:var(--brand-dark);
+      color:#fff;
+      position:sticky;
+      top:0;
+      z-index:10;
+      border-bottom:4px solid var(--brand-blue);
+    }
+    header .left{
+      display:flex;align-items:center;gap:12px;
+    }
+    header .logo{
+      width:36px;height:36px;
+      border-radius:6px;
+      background:var(--brand-blue);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:700;color:#fff;
+    }
+    header h1{
+      font-size:18px;margin:0;line-height:1.2;
+    }
+    header a.home{
+      color:#cfe8f3;text-decoration:none;font-weight:600;
+      padding:8px 12px;border:1px solid #2d6d8a;border-radius:8px;
+      background:#084861;
+    }
+    main{
+      display:grid;
+      grid-template-columns: 1fr 320px;
+      gap:16px;
+      padding:16px;
+      max-width:1200px;margin:0 auto;
+    }
+    @media (max-width:960px){
+      main{grid-template-columns:1fr;}
+    }
+
+    /* Board */
+    .board-wrapper{
+      background:#fff;
+      border:2px solid var(--tile-border);
+      border-radius:12px;
+      padding:16px;
+      box-shadow:0 6px 20px rgba(0,0,0,0.08);
+      overflow:hidden;
+    }
+    .board{
+      width:100%;
+      aspect-ratio:1/1;
+      display:grid;
+      grid-template-columns:repeat(11, 1fr);
+      grid-template-rows:repeat(11, 1fr);
+      position:relative;
+      background:radial-gradient(circle at 50% 50%, #f8fbfd 0%, #ffffff 60%);
+      border-radius:8px;
+      overflow:hidden;
+    }
+    .tile{
+      background:var(--tile-bg);
+      border:1px solid var(--tile-border);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative; /* Anchor token */
+      border-radius:6px;
+      box-shadow:0 1px 2px rgba(0,0,0,0.04);
+    }
+    .tile.corner{
+      background:#f9fcff;
+      border:2px solid var(--brand-blue);
+    }
+    .tile .label{
+      position:absolute;
+      top:6px;left:6px;
+      font-size:12px;font-weight:600;color:#607d8b;
+    }
+    .tile .name{
+      text-align:center;
+      font-size:12px;
+      padding:0 4px;
+      color:#37474f;
+    }
+    .tile.go{
+      background:linear-gradient(135deg,#fff 0%, #e8f8ff 50%, #d1f4ff 100%);
+      border:2px solid var(--accent);
+    }
+
+    /* Token centered inside tile */
+    .token{
+      width:20px;height:20px;border-radius:50%;
+      background:var(--brand-blue);
+      border:2px solid #fff;
+      box-shadow:0 2px 6px rgba(0,0,0,0.2);
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%);
+      pointer-events:none;
+    }
+
+    /* Sidebar */
+    .sidebar{
+      background:#fff;
+      border:2px solid var(--tile-border);
+      border-radius:12px;
+      padding:16px;
+      box-shadow:0 6px 20px rgba(0,0,0,0.08);
+      display:flex;flex-direction:column;gap:12px;
+    }
+    .panel{
+      border:1px solid var(--tile-border);
+      border-radius:8px;
+      padding:12px;
+      background:#fcfdff;
+    }
+    .controls{
+      display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+    }
+    button{
+      appearance:none;border:none;border-radius:8px;
+      padding:10px 14px;font-weight:600;
+      background:var(--brand-blue);color:#fff;
+      cursor:pointer;
+      box-shadow:0 2px 6px rgba(0,0,0,0.12);
+    }
+    button.secondary{background:#eceff1;color:#333;}
+    button:disabled{opacity:.6;cursor:not-allowed;}
+    .stat{
+      display:flex;justify-content:space-between;
+      font-size:14px;margin:6px 0;
+    }
+    .dice-face{
+      font-size:28px;line-height:1;
+    }
+    .activity h3{
+      margin:0 0 8px 0;font-size:16px;
+    }
+    .activity p{
+      margin:0 0 8px 0;font-size:14px;color:#455a64;
+    }
+    .activity a{
+      color:#0b7285;text-decoration:none;font-weight:600;
+    }
+    .banner{
+      font-size:13px;color:#274b5a;background:#eaf6fb;
+      padding:8px;border-radius:6px;border:1px dashed var(--brand-blue);
+    }
+    footer{
+      padding:12px 16px;color:#68808e;font-size:12px;text-align:center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="left">
+      <div class="logo" aria-hidden="true">Ci</div>
+      <h1>Cisco “AI for Everyone” Monopoly-Style CTF</h1>
+    </div>
+    <a class="home" href="index.html" aria-label="Back to landing page">Home</a>
+  </header>
+
+  <main>
+    <section class="board-wrapper">
+      <div id="board" class="board" aria-label="Monopoly-style board"></div>
+    </section>
+
+    <aside class="sidebar">
+      <div class="panel banner">
+        Theme: AI for Everyone. Roll the dice and complete one lap to finish the game.
+      </div>
+      <div class="panel">
+        <div class="controls">
+          <button id="rollBtn" aria-label="Roll the dice">Roll Dice</button>
+          <button id="resetBtn" class="secondary" aria-label="Reset the game">Reset</button>
+          <div id="diceFace" class="dice-face" aria-live="polite" title="Dice result">–</div>
+        </div>
+        <div class="stat"><span>Position:</span><strong id="pos">0 (Go)</strong></div>
+        <div class="stat"><span>Moves:</span><strong id="moves">0</strong></div>
+        <div class="stat"><span>Status:</span><strong id="status">Ready.</strong></div>
+      </div>
+      <div class="panel activity">
+        <h3 id="activityTitle">Welcome to the board.</h3>
+        <p id="activityText">Roll to begin your journey. Each space reveals a fact or a link.</p>
+        <p id="activityLinkWrap" style="display:none;">
+          Link: <a id="activityLink" href="#" target="_blank" rel="noopener">Open resource.</a>
+        </p>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    © Cisco. For educational purposes. Customize branding, activities, and links as needed.
+  </footer>
+
+  <script>
+    // Board and game config
+    const BOARD_SIZE = 40;
+    const boardEl = document.getElementById('board');
+    const rollBtn = document.getElementById('rollBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const posEl = document.getElementById('pos');
+    const movesEl = document.getElementById('moves');
+    const statusEl = document.getElementById('status');
+    const diceFaceEl = document.getElementById('diceFace');
+
+    const activityTitleEl = document.getElementById('activityTitle');
+    const activityTextEl = document.getElementById('activityText');
+    const activityLinkWrapEl = document.getElementById('activityLinkWrap');
+    const activityLinkEl = document.getElementById('activityLink');
+
+    const diceFaces = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+
+    // Activities: mix of facts and links.
+    const activities = [
+      {type:'fact', title:'Welcome to Go.', text:'Start here. Complete one lap to finish the game.'},
+      {type:'link', title:'Cisco Homepage.', url:'https://www.cisco.com/'},
+      {type:'fact', title:'What is AI?', text:'AI enables computers to perform tasks that typically require human intelligence.'},
+      {type:'fact', title:'Machine Learning.', text:'ML finds patterns in data to make predictions or decisions.'},
+      {type:'link', title:'OECD AI Policy Observatory.', url:'https://oecd.ai/'},
+      {type:'fact', title:'Neural Networks.', text:'Neural networks approximate complex functions using layers of parameters.'},
+      {type:'link', title:'UNESCO AI Overview.', url:'https://www.unesco.org/en/artificial-intelligence'},
+      {type:'fact', title:'Responsible AI.', text:'Responsible AI prioritizes transparency, fairness, and accountability.'},
+      {type:'link', title:'NIST AI RMF.', url:'https://www.nist.gov/itl/ai-risk-management-framework'},
+      {type:'fact', title:'Data Quality.', text:'Quality data often matters more than model complexity.'},
+      {type:'fact', title:'Go Corner.', text:'Corners mark key milestones. Keep rolling.'},
+      {type:'link', title:'Stanford AI Index.', url:'https://aiindex.stanford.edu/'},
+      {type:'fact', title:'Bias in AI.', text:'Bias can enter AI systems from data, design, or deployment.'},
+      {type:'fact', title:'Inference.', text:'Inference is using a trained model to make predictions.'},
+      {type:'fact', title:'Training.', text:'Training adjusts parameters to minimize error on data.'},
+      {type:'link', title:'Open Data Portals.', url:'https://data.gov/'},
+      {type:'fact', title:'Edge AI.', text:'Edge AI runs models close to where data is generated.'},
+      {type:'fact', title:'Explainability.', text:'Explainability helps users understand model outputs.'},
+      {type:'link', title:'Khan Academy – AI Basics.', url:'https://www.khanacademy.org/computing/computer-science'},
+      {type:'fact', title:'Energy Efficiency.', text:'Efficient models reduce cost and environmental impact.'},
+      {type:'fact', title:'Top-left Corner.', text:'You are progressing well. Stay curious.'},
+      {type:'link', title:'W3C Web Accessibility.', url:'https://www.w3.org/WAI/'},
+      {type:'fact', title:'Accessibility.', text:'Accessible AI and interfaces benefit everyone.'},
+      {type:'fact', title:'Classification vs. Regression.', text:'Classification predicts categories; regression predicts numbers.'},
+      {type:'link', title:'CDC Data Visualizations.', url:'https://www.cdc.gov/dataviz/'},
+      {type:'fact', title:'Privacy.', text:'Privacy-by-design supports trust in AI systems.'},
+      {type:'fact', title:'Robustness.', text:'Robust systems handle diverse inputs and edge cases.'},
+      {type:'link', title:'Creative Commons – Open Licensing.', url:'https://creativecommons.org/'},
+      {type:'fact', title:'Human-in-the-Loop.', text:'Human oversight can improve outcomes and safety.'},
+      {type:'fact', title:'Top-right Corner.', text:'One side left. Keep going.'},
+      {type:'link', title:'GitHub Pages Guide.', url:'https://docs.github.com/en/pages'},
+      {type:'fact', title:'APIs.', text:'APIs let applications communicate and integrate AI services.'},
+      {type:'fact', title:'Metrics.', text:'Choose metrics aligned with real-world goals, not just accuracy.'},
+      {type:'link', title:'OECD – AI Principles.', url:'https://oecd.ai/en/ai-principles'},
+      {type:'fact', title:'Security.', text:'Secure AI systems protect data, models, and infrastructure.'},
+      {type:'fact', title:'Fairness.', text:'Consider impacts on different users and groups.'},
+      {type:'link', title:'US Digital Services Playbook.', url:'https://playbook.cio.gov/'},
+      {type:'fact', title:'Deployment.', text:'Monitor models after deployment to catch drift.'},
+      {type:'fact', title:'Evaluation.', text:'Evaluate with representative datasets and scenarios.'},
+      {type:'link', title:'Cisco – Add Your AI Page URL.', url:'#'},
+      {type:'fact', title:'Pass Go.', text:'Crossing Go completes your lap. Great job!'}
+    ];
+
+    function tileName(i){
+      const item = activities[i];
+      if(!item) return 'Tile';
+      return (item.title || 'Tile').replace(/\.$/, '');
+    }
+
+    // Map index [0..39] to 11x11 grid border coordinates
+    function indexToGrid(i){
+      if(i < 0 || i >= BOARD_SIZE) throw new Error('Index out of range');
+      if(i <= 10){
+        return {row:10, col:10 - i};      // Bottom row
+      } else if(i <= 20){
+        return {row:20 - i, col:0};       // Left column
+      } else if(i <= 30){
+        return {row:0, col:i - 20};       // Top row
+      } else {
+        return {row:i - 30, col:10};      // Right column
+      }
+    }
+
+    // Build board tiles
+    const tiles = [];
+    function buildBoard(){
+      for(let i=0;i<BOARD_SIZE;i++){
+        const coords = indexToGrid(i);
+        const div = document.createElement('div');
+        div.className = 'tile';
+        const isCorner = (i % 10 === 0);
+        if(isCorner) div.classList.add('corner');
+        if(i === 0) div.classList.add('go');
+
+        div.style.gridRow = (coords.row + 1);
+        div.style.gridColumn = (coords.col + 1);
+
+        const label = document.createElement('div');
+        label.className = 'label';
+        label.textContent = i === 0 ? 'Go' : i;
+
+        const name = document.createElement('div');
+        name.className = 'name';
+        name.textContent = tileName(i);
+
+        div.appendChild(label);
+        div.appendChild(name);
+
+        div.dataset.index = i.toString();
+        boardEl.appendChild(div);
+        tiles.push(div);
+      }
+    }
+
+    // Token (player piece)
+    const token = document.createElement('div');
+    token.className = 'token';
+
+    let position = 0;
+    let moves = 0;
+    let finished = false;
+
+    function placeToken(index){
+      const tile = tiles[index];
+      if(!tile) return;
+      if(token.parentElement !== tile){
+        tile.appendChild(token);
+      } else {
+        tile.appendChild(token);
+      }
+    }
+
+    function updateHUD(){
+      posEl.textContent = position === 0 ? '0 (Go)' : position.toString();
+      movesEl.textContent = moves.toString();
+    }
+
+    function showStatus(text){ statusEl.textContent = text; }
+
+    function showActivity(index){
+      const item = activities[index];
+      if(!item){
+        activityTitleEl.textContent = 'No activity.';
+        activityTextEl.textContent = 'This tile has no content.';
+        activityLinkWrapEl.style.display = 'none';
+        return;
+      }
+      activityTitleEl.textContent = item.title;
+      if(item.type === 'fact'){
+        activityTextEl.textContent = item.text || '';
+        activityLinkWrapEl.style.display = 'none';
+      } else if(item.type === 'link'){
+        activityTextEl.textContent = 'Explore the resource and note one insight you found.';
+        activityLinkEl.textContent = 'Open resource.';
+        activityLinkEl.href = item.url || '#';
+        activityLinkWrapEl.style.display = 'block';
+      } else {
+        activityTextEl.textContent = '';
+        activityLinkWrapEl.style.display = 'none';
+      }
+    }
+
+    function finishGame(){
+      finished = true;
+      showStatus('You passed Go. Game complete!');
+      activityTitleEl.textContent = 'You Passed Go!';
+      activityTextEl.textContent = 'Game complete—thanks for playing.';
+      activityLinkWrapEl.style.display = 'none';
+      rollBtn.disabled = true;
+    }
+
+    function rollDice(){
+      const n = Math.floor(Math.random()*6)+1;
+      diceFaceEl.textContent = diceFaces[n-1];
+      return n;
+    }
+
+    function animateMove(steps){
+      return new Promise(resolve=>{
+        let remaining = steps;
+        function step(){
+          if(remaining <= 0){
+            resolve();
+            return;
+          }
+          position = (position + 1) % BOARD_SIZE;
+          placeToken(position);
+          remaining--;
+          setTimeout(step, 160);
+        }
+        step();
+      });
+    }
+
+    async function handleRoll(){
+      if(finished) return;
+      rollBtn.disabled = true;
+      showStatus('Rolling…');
+      const n = rollDice();
+      const startPos = position;
+      await animateMove(n);
+      moves++;
+      updateHUD();
+
+      const crossedGo = ((startPos + n) >= BOARD_SIZE) || (position < startPos);
+      if(crossedGo){
+        finishGame();
+      } else {
+        showStatus('Landed on tile ' + position + '.');
+        showActivity(position);
+        rollBtn.disabled = false;
+      }
+    }
+
+    function resetGame(){
+      position = 0;
+      moves = 0;
+      finished = false;
+      diceFaceEl.textContent = '–';
+      updateHUD();
+      showStatus('Ready.');
+      showActivity(0);
+      placeToken(0);
+      rollBtn.disabled = false;
+    }
+
+    // Init
+    buildBoard();
+    placeToken(0);
+    showActivity(0);
+    updateHUD();
+
+    // Events
+    rollBtn.addEventListener('click', handleRoll);
+    resetBtn.addEventListener('click', resetGame);
+  </script>
+</body>
+</html>
