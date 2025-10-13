@@ -1,126 +1,95 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Cisco | Capture the Flag: AI for Everyone</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    :root{
-      --brand-blue:#1BA0D7;
-      --brand-dark:#003A5D;
-      --brand-light:#E6F4FA;
-      --text:#0b2b40;
-      --muted:#5f7d8a;
-      --panel:#ffffff;
-      --ring:#cfe8f3;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(1200px 600px at 80% -10%, #f6fbff, #fff 60%) no-repeat,
-        linear-gradient(180deg, var(--brand-light), #fff 28%, #fff 100%);
-    }
-    header{
-      display:flex;align-items:center;gap:12px;
-      padding:16px 20px;background:var(--brand-dark);color:#fff;
-      border-bottom:4px solid var(--brand-blue);
-      position:sticky;top:0;z-index:10;
-    }
-    .logo{
-      width:36px;height:36px;border-radius:8px;
-      background:var(--brand-blue);display:flex;align-items:center;justify-content:center;
-      font-weight:800;color:#fff;letter-spacing:.5px;
-    }
-    header h1{font-size:18px;margin:0}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capture the Flat: AI for Everyone</title>
+    <style>
+        /* Basic reset and body styling */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif; /* Using a common sans-serif font similar to the image */
+            background: linear-gradient(to bottom right, #007bff, #003366); /* Blue gradient background */
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Vertically center content */
+            align-items: center; /* Horizontally center content */
+            min-height: 100vh; /* Make body take full viewport height */
+            text-align: center;
+            position: relative; /* For positioning the bot icon */
+            overflow: hidden; /* Hide potential scrollbars */
+        }
 
-    main{
-      display:grid;place-items:center;
-      padding:40px 16px;min-height:calc(100% - 72px);
-    }
-    .hero{
-      max-width:920px;width:100%;
-      background:var(--panel);
-      border:1px solid var(--ring);
-      border-radius:16px;
-      box-shadow:0 10px 30px rgba(0,0,0,.08);
-      padding:28px;
-      display:grid;gap:16px;
-    }
-    .eyebrow{
-      display:inline-flex;align-items:center;gap:8px;
-      font-size:12px;font-weight:700;color:#0a3b5a;
-      background:#eaf6fb;border:1px dashed var(--brand-blue);
-      padding:6px 10px;border-radius:999px;width:max-content;
-    }
-    h2{
-      font-size:32px;line-height:1.2;margin:0;color:#07283a;
-    }
-    p.lead{
-      margin:0;color:var(--muted);font-size:16px;
-    }
-    .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
-    a.button{
-      display:inline-flex;align-items:center;justify-content:center;
-      gap:10px;padding:12px 18px;border-radius:10px;
-      background:var(--brand-blue);color:#fff;text-decoration:none;
-      font-weight:700;box-shadow:0 4px 14px rgba(27,160,215,.25);
-    }
-    a.button:hover{filter:brightness(.98)}
-    a.secondary{
-      background:#eef5f8;color:#05334c;font-weight:600;
-      box-shadow:none;border:1px solid var(--ring);
-    }
-    .grid{
-      display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-      margin-top:8px;
-    }
-    .card{
-      border:1px solid var(--ring);border-radius:12px;background:#fbfdff;padding:14px 16px;
-    }
-    .card h3{margin:0 0 6px 0;font-size:14px}
-    .card p{margin:0;color:#5b7380;font-size:13px}
-    footer{padding:14px;color:#6e8a98;font-size:12px;text-align:center}
-  </style>
+        /* Main content container for centering text and button */
+        .main-content {
+            max-width: 700px; /* Adjust width to match the content block in the image */
+            padding: 20px;
+            box-sizing: border-box; /* Include padding in the element's total width and height */
+        }
+
+        /* Cisco Logo styling */
+        .cisco-logo {
+            width: 120px; /* Approximate size from image */
+            height: auto;
+            margin-bottom: 25px; /* Space below the logo */
+        }
+
+        /* Main heading styling */
+        h1 {
+            font-size: 2.8em; /* Larger font for the main title */
+            margin: 0 0 15px 0; /* Adjust margins */
+            line-height: 1.2;
+            font-weight: normal; /* The font in the image doesn't appear extra bold */
+        }
+
+        /* Paragraph (description) styling */
+        p {
+            font-size: 1.3em; /* Size for the description text */
+            margin: 0 0 40px 0; /* Space below the paragraph */
+            line-height: 1.4;
+            opacity: 0.9; /* Slightly less prominent than the title */
+        }
+
+        /* Start button styling */
+        .start-button {
+            background-color: white;
+            color: #007bff; /* Cisco blue for the button text */
+            border: none;
+            padding: 15px 50px; /* Generous padding for button size */
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 5px; /* Slightly rounded corners */
+            cursor: pointer;
+            text-decoration: none; /* Remove underline if it were an <a> tag */
+            display: inline-block; /* Allows padding and margin to work correctly */
+            transition: background-color 0.3s ease; /* Smooth hover effect */
+        }
+
+        .start-button:hover {
+            background-color: #e0e0e0; /* Slightly darker white on hover */
+        }
+
+        /* Bot icon styling */
+        .bot-icon {
+            position: absolute;
+            bottom: 20px; /* Distance from the bottom edge */
+            left: 20px; /* Distance from the left edge */
+            width: 70px; /* Approximate size from image */
+            height: auto;
+            opacity: 0.8; /* Slightly faded to match the image */
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <div class="logo" aria-hidden="true">Ci</div>
-    <h1>Cisco</h1>
-  </header>
-
-  <main>
-    <section class="hero" aria-labelledby="title">
-      <span class="eyebrow">Capture the Flag</span>
-      <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Cisco_logo_blue_2016.svg" alt="Cisco" className="mx-auto mb-4 w-36" />
-      <h2 id="title">"AI for Everyone" — Learn key AI concepts as you play.</h2>
-      <p class="lead">Roll the dice, explore 40 AI themed spaces, and uncover facts and resources about AI. Finish after passing Go.</p>
-      <div class="cta-row">
-        <a class="button" href="game.html" aria-label="Start the AI for Everyone game">Start</a>
-      </div>
-
-      <div class="grid" aria-label="What you'll learn">
-        <div class="card">
-          <h3>Responsible AI.</h3>
-          <p>Fairness, transparency, privacy, and risk management in real-world systems.</p>
-        </div>
-        <div class="card">
-          <h3>Core concepts.</h3>
-          <p>Training vs. inference, metrics, bias, explainability, and more.</p>
-        </div>
-        <div class="card">
-          <h3>Open resources.</h3>
-          <p>Explore curated links to reputable AI guides and frameworks.</p>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>© Cisco. For educational use.</footer>
-
-  <noscript>This experience requires JavaScript enabled.</noscript>
+    <div class="main-content">
+        <!-- Placeholder for Cisco logo. Replace 'https://www.cisco.com/etc/designs/cdc/cisco-logo.svg' with your actual logo path. -->
+        <img src="https://www.cisco.com/etc/designs/cdc/cisco-logo.svg" alt="Cisco Logo" class="cisco-logo">
+        <h1>Capture the Flat: AI for Everyone</h1>
+        <p>A short interactive demo for Cisco Amsterdam 2026 — learn key AI concepts as you play.</p>
+        <button class="start-button">Start</button>
+    </div>
+    <!-- Placeholder for the bot icon. Replace 'https://www.cisco.com/content/dam/cdc/en/us/products/security/duo/images/duo-icon.png' with your actual bot icon path. -->
+    <img src="https://www.cisco.com/content/dam/cdc/en/us/products/security/duo/images/duo-icon.png" alt="Bot Icon" class="bot-icon">
 </body>
 </html>
