@@ -101,15 +101,17 @@
       background:linear-gradient(135deg,#fff 0%, #e8f8ff 50%, #d1f4ff 100%);
       border:2px solid var(--accent);
     }
-    .token{
-      width:20px;height:20px;border-radius:50%;
-      background:var(--brand-blue);
-      border:2px solid #fff;
-      box-shadow:0 2px 6px rgba(0,0,0,0.2);
-      position:absolute;
-      transform:translate(-50%, -50%);
-      pointer-events:none;
-    }
+.token{
+  width:20px;height:20px;border-radius:50%;
+  background:var(--brand-blue);
+  border:2px solid #fff;
+  box-shadow:0 2px 6px rgba(0,0,0,0.2);
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  pointer-events:none;
+}
 
     /* Sidebar */
     .sidebar{
@@ -333,18 +335,14 @@
     let moves = 0;
     let finished = false;
 
-    function placeToken(index){
-      const tile = tiles[index];
-      if(!tile) return;
-      tile.appendChild(token);
-      // Center token inside tile
-      const rect = tile.getBoundingClientRect();
-      const parentRect = boardEl.getBoundingClientRect();
-      const x = (tile.offsetLeft + rect.width/2);
-      const y = (tile.offsetTop + rect.height/2);
-      token.style.left = x + 'px';
-      token.style.top = y + 'px';
-    }
+function placeToken(index){
+  const tile = tiles[index];
+  if(!tile) return;
+  tile.appendChild(token);
+  // Center via CSS; no manual measurements needed.
+  token.style.left = '50%';
+  token.style.top = '50%';
+}
 
     function updateHUD(){
       posEl.textContent = position === 0 ? '0 (Go)' : position.toString();
@@ -456,8 +454,7 @@
       }
     });
 
-    // Handle layout reflow for token position on resize
-    window.addEventListener('resize', ()=>placeToken(position));
+
   </script>
 </body>
 </html>
