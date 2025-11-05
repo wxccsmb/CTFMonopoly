@@ -69,11 +69,12 @@ overflow-y:hidden;
       position:relative;border-radius:6px;box-shadow:0 1px 2px rgba(0,0,0,0.04);z-index:1;
     }
     .tile.corner{background:#f9fcff;border:2px solid var(--brand-blue);}
+    .tile.go{background:linear-gradient(135deg,#fff 0%, #e8f8ff 50%, #d1f4ff 100%);border:2px solid var(--accent);}
     .tile .label{
       position:absolute;top:6px;left:6px;font-size:12px;font-weight:600;color:#607d8b;
     }
     .tile .name{text-align:center;font-size:12px;padding:0 4px;color:#37474f;}
-    .tile.go{background:linear-gradient(135deg,#fff 0%, #e8f8ff 50%, #d1f4ff 100%);border:2px solid var(--accent);}
+    
 
     /* Token centered inside tile */
     .token{
@@ -94,7 +95,8 @@ overflow-y:hidden;
       border:1px solid var(--ring);border-radius:14px;padding:14px;
       box-shadow:0 8px 28px rgba(0,0,0,0.15);
       pointer-events:auto;
-      
+      /* ADD THIS LINE: Moves the HUD up by the calculated offset */
+      transform: translateY(var(--overlay-offset)); 
     }
     .banner{
       font-size:13px;color:#274b5a;background:#eaf6fb;
@@ -118,16 +120,18 @@ overflow-y:hidden;
     }
     .card-backdrop.show{display:block;}
     .card-modal{
-      position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);
+      position:absolute;top:50%;left:50%;
+      /* MODIFY THIS LINE: Moves the card modal up by the calculated offset */
+      transform:translate(-50%, calc(-50% + var(--overlay-offset)));
       width:min(92%, 340px);background:#fff;border:2px solid var(--tile-border);
       border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.22);
       padding:14px;z-index:6;display:none;animation:cardIn .18s ease-out;
     }
-    .card-modal.show{display:block;}
-@keyframes cardIn{
-from{opacity:0;transform:translate(-50%, calc(-48% + var(--overlay-offset))) scale(0.95)}
-to{opacity:1;transform:translate(-50%, calc(-50% + var(--overlay-offset))) scale(1)}
-}
+    /* Ensure the animation also uses the updated offset for consistency */
+    @keyframes cardIn{
+      from{opacity:0;transform:translate(-50%, calc(-48% + var(--overlay-offset))) scale(0.95)}
+      to{opacity:1;transform:translate(-50%, calc(-50% + var(--overlay-offset))) scale(1)}
+    }
     .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
     .chip{
       display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;
@@ -149,7 +153,7 @@ to{opacity:1;transform:translate(-50%, calc(-50% + var(--overlay-offset))) scale
   <header>
     <div class="left">
       <div class="logo" aria-hidden="true">Ci</div>
-      <h1>Cisco “AI for Everyone” Monopoly-Style CTF</h1>
+      <h1>Cisco â€œAI for Everyoneâ€ Monopoly-Style CTF</h1>
     </div>
     <a class="home" href="index.html" aria-label="Back to landing page">Home</a>
   </header>
@@ -167,7 +171,7 @@ to{opacity:1;transform:translate(-50%, calc(-50% + var(--overlay-offset))) scale
               <div class="controls">
                 <button id="rollBtn" aria-label="Roll the dice">Roll Dice</button>
                 <button id="resetBtn" class="secondary" aria-label="Reset the game">Reset</button>
-                <div id="diceFace" class="dice-face" aria-live="polite" title="Dice result">–</div>
+                <div id="diceFace" class="dice-face" aria-live="polite" title="Dice result">â€“</div>
               </div>
               <div class="stat"><span>Position:</span><strong id="pos">0 (Go)</strong></div>
               <div class="stat"><span>Moves:</span><strong id="moves">0</strong></div>
@@ -181,7 +185,7 @@ to{opacity:1;transform:translate(-50%, calc(-50% + var(--overlay-offset))) scale
         <div id="cardModal" class="card-modal" role="dialog" aria-modal="true" aria-labelledby="cardTitle" aria-describedby="cardText">
           <div class="card-header">
             <div id="cardChip" class="chip">Concept Card</div>
-            <button id="cardClose" class="close-btn" aria-label="Close card">×</button>
+            <button id="cardClose" class="close-btn" aria-label="Close card">Ã—</button>
           </div>
           <h3 id="cardTitle" class="card-title">Title</h3>
           <p id="cardText" class="card-text">Content.</p>
@@ -198,13 +202,16 @@ to{opacity:1;transform:translate(-50%, calc(-50% + var(--overlay-offset))) scale
   </main>
 
   <footer>
-    © Cisco. For educational purposes. Customize branding, activities, and links as needed.
+    Â© Cisco. For educational purposes. Customize branding, activities, and links as needed.
   </footer>
 
   <script>
     // Board and game config
     const BOARD_SIZE = 40;
-    const SPACES_UP = 10; 
+    // MODIFIED: Changed SPACES_UP from 10 to a smaller value (e.g., 2)
+    // This controls how many "tile heights" the overlay content is shifted upwards.
+    // Adjust this value (e.g., 1, 1.5, 2) to fine-tune the vertical position.
+    const SPACES_UP = 2; 
     const headerEl = document.querySelector('header');
     const boardWrapperEl = document.querySelector('.board-wrapper');
     const boardEl = document.getElementById('board');
@@ -227,7 +234,7 @@ to{opacity:1;transform:translate(-50%, calc(-50% + var(--overlay-offset))) scale
     const cardCloseEl = document.getElementById('cardClose');
     const cardClose2El = document.getElementById('cardClose2');
 
-    const diceFaces = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+    const diceFaces = ['âš€','âš','âš‚','âšƒ','âš','âš…'];
 
     // Activities
     const activities = [
@@ -249,7 +256,7 @@ to{opacity:1;transform:translate(-50%, calc(-50% + var(--overlay-offset))) scale
       {type:'link', title:'Open Data Portals.', url:'https://data.gov/'},
       {type:'fact', title:'Edge AI.', text:'Edge AI runs models close to where data is generated.'},
       {type:'fact', title:'Explainability.', text:'Explainability helps users understand model outputs.'},
-      {type:'link', title:'Khan Academy – AI Basics.', url:'https://www.khanacademy.org/computing/computer-science'},
+      {type:'link', title:'Khan Academy â€“ AI Basics.', url:'https://www.khanacademy.org/computing/computer-science'},
       {type:'fact', title:'Energy Efficiency.', text:'Efficient models reduce cost and environmental impact.'},
       {type:'fact', title:'Top-left Corner.', text:'You are progressing well. Stay curious.'},
       {type:'link', title:'W3C Web Accessibility.', url:'https://www.w3.org/WAI/'},
@@ -258,19 +265,19 @@ to{opacity:1;transform:translate(-50%, calc(-50% + var(--overlay-offset))) scale
       {type:'link', title:'CDC Data Visualizations.', url:'https://www.cdc.gov/dataviz/'},
       {type:'fact', title:'Privacy.', text:'Privacy-by-design supports trust in AI systems.'},
       {type:'fact', title:'Robustness.', text:'Robust systems handle diverse inputs and edge cases.'},
-      {type:'link', title:'Creative Commons – Open Licensing.', url:'https://creativecommons.org/'},
+      {type:'link', title:'Creative Commons â€“ Open Licensing.', url:'https://creativecommons.org/'},
       {type:'fact', title:'Human-in-the-Loop.', text:'Human oversight can improve outcomes and safety.'},
       {type:'fact', title:'Top-right Corner.', text:'One side left. Keep going.'},
       {type:'link', title:'GitHub Pages Guide.', url:'https://docs.github.com/en/pages'},
       {type:'fact', title:'APIs.', text:'APIs let applications communicate and integrate AI services.'},
       {type:'fact', title:'Metrics.', text:'Choose metrics aligned with real-world goals, not just accuracy.'},
-      {type:'link', title:'OECD – AI Principles.', url:'https://oecd.ai/en/ai-principles'},
+      {type:'link', title:'OECD â€“ AI Principles.', url:'https://oecd.ai/en/ai-principles'},
       {type:'fact', title:'Security.', text:'Secure AI systems protect data, models, and infrastructure.'},
       {type:'fact', title:'Fairness.', text:'Consider impacts on different users and groups.'},
       {type:'link', title:'US Digital Services Playbook.', url:'https://playbook.cio.gov/'},
       {type:'fact', title:'Deployment.', text:'Monitor models after deployment to catch drift.'},
       {type:'fact', title:'Evaluation.', text:'Evaluate with representative datasets and scenarios.'},
-      {type:'link', title:'Cisco – Add Your AI Page URL.', url:'#'},
+      {type:'link', title:'Cisco â€“ Add Your AI Page URL.', url:'#'},
       {type:'fact', title:'Pass Go.', text:'Crossing Go completes your lap. Great job!'}
     ];
 
@@ -332,7 +339,7 @@ const mainPaddingY = 32; // main has 16px top + 16px bottom
 const availableHeight = Math.max(320, window.innerHeight - headerHeight - mainPaddingY);
 
 
-// Measure the wrapper’s inner content width (exclude its paddings).
+// Measure the wrapperâ€™s inner content width (exclude its paddings).
 const styles = getComputedStyle(boardWrapperEl);
 const padL = parseFloat(styles.paddingLeft) || 0;
 const padR = parseFloat(styles.paddingRight) || 0;
@@ -345,10 +352,10 @@ boardEl.style.width = size + 'px';
 boardEl.style.height = size + 'px';
 
 
-// If you’re using the overlay offset by tiles, keep this (otherwise remove):
+// If youâ€™re using the overlay offset by tiles, keep this (otherwise remove):
 if (typeof SPACES_UP !== 'undefined') {
 const tileHeight = size / 11;
-const offsetPx = -(tileHeight * SPACES_UP);
+const offsetPx = -(tileHeight * SPACES_UP); // This calculates a negative offset
 boardEl.style.setProperty('--overlay-offset', offsetPx + 'px');
 }
 }
@@ -395,7 +402,7 @@ boardEl.style.setProperty('--overlay-offset', offsetPx + 'px');
         cardChipEl.className = 'chip';
         cardChipEl.textContent = 'AI Card';
         cardTitleEl.textContent = 'You Passed Go!';
-        cardTextEl.textContent = 'Game complete—thanks for playing.';
+        cardTextEl.textContent = 'Game completeâ€”thanks for playing.';
         cardLinkWrapEl.style.display = 'none';
         cardOpenBtnEl.style.display = 'none';
         openCard();
@@ -468,7 +475,7 @@ boardEl.style.setProperty('--overlay-offset', offsetPx + 'px');
     async function handleRoll(){
       if(finished) return;
       rollBtn.disabled = true;
-      showStatus('Rolling…');
+      showStatus('Rollingâ€¦');
       const n = rollDice();
       const startPos = position;
       await animateMove(n);
@@ -489,7 +496,7 @@ boardEl.style.setProperty('--overlay-offset', offsetPx + 'px');
       position = 0;
       moves = 0;
       finished = false;
-      diceFaceEl.textContent = '–';
+      diceFaceEl.textContent = 'â€“';
       updateHUD();
       showStatus('Ready.');
       placeToken(0);
