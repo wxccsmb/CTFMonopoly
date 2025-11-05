@@ -14,7 +14,6 @@
       --accent:#00C1D4;
       --text:#1f2d3d;
       --ring:#d7e6ee;
-      --card-orange:#ffb74d; /* Monopoly-card vibe accent. */
     }
     *{box-sizing:border-box;}
     body{
@@ -24,134 +23,75 @@
       background:linear-gradient(180deg,var(--brand-light),#fff);
     }
     header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding:16px 20px;
-      background:var(--brand-dark);
-      color:#fff;
-      position:sticky;
-      top:0;
-      z-index:10;
-      border-bottom:4px solid var(--brand-blue);
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:16px 20px;background:var(--brand-dark);color:#fff;
+      position:sticky;top:0;z-index:10;border-bottom:4px solid var(--brand-blue);
     }
     header .left{display:flex;align-items:center;gap:12px;}
     header .logo{
-      width:36px;height:36px;border-radius:6px;
-      background:var(--brand-blue);
-      display:flex;align-items:center;justify-content:center;
-      font-weight:700;color:#fff;
+      width:36px;height:36px;border-radius:6px;background:var(--brand-blue);
+      display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;
     }
     header h1{font-size:18px;margin:0;line-height:1.2;}
     header a.home{
       color:#cfe8f3;text-decoration:none;font-weight:600;
-      padding:8px 12px;border:1px solid #2d6d8a;border-radius:8px;
-      background:#084861;
+      padding:8px 12px;border:1px solid #2d6d8a;border-radius:8px;background:#084861;
     }
 
     main{padding:16px;max-width:1200px;margin:0 auto;}
 
     /* Board */
     .board-wrapper{
-      background:#fff;
-      border:2px solid var(--tile-border);
-      border-radius:12px;
-      padding:16px;
-      box-shadow:0 6px 20px rgba(0,0,0,0.08);
-      overflow:hidden;
+      background:#fff;border:2px solid var(--tile-border);border-radius:12px;
+      padding:16px;box-shadow:0 6px 20px rgba(0,0,0,0.08);overflow:hidden;
     }
     .board{
-      width:100%;
-      aspect-ratio:1/1;
-      display:grid;
+      width:100%;aspect-ratio:1/1;display:grid;
       grid-template-columns:repeat(11, 1fr);
       grid-template-rows:repeat(11, 1fr);
       position:relative; /* Anchor overlay and card */
       background:radial-gradient(circle at 50% 50%, #f8fbfd 0%, #ffffff 60%);
-      border-radius:8px;
-      overflow:hidden;
+      border-radius:8px;overflow:hidden;
     }
     .tile{
-      background:var(--tile-bg);
-      border:1px solid var(--tile-border);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      position:relative; /* Anchor token */
-      border-radius:6px;
-      box-shadow:0 1px 2px rgba(0,0,0,0.04);
-      z-index:1;
+      background:var(--tile-bg);border:1px solid var(--tile-border);
+      display:flex;align-items:center;justify-content:center;
+      position:relative;border-radius:6px;box-shadow:0 1px 2px rgba(0,0,0,0.04);z-index:1;
     }
-    .tile.corner{
-      background:#f9fcff;
-      border:2px solid var(--brand-blue);
-    }
+    .tile.corner{background:#f9fcff;border:2px solid var(--brand-blue);}
     .tile .label{
-      position:absolute;
-      top:6px;left:6px;
-      font-size:12px;font-weight:600;color:#607d8b;
+      position:absolute;top:6px;left:6px;font-size:12px;font-weight:600;color:#607d8b;
     }
-    .tile .name{
-      text-align:center;
-      font-size:12px;
-      padding:0 4px;
-      color:#37474f;
-    }
-    .tile.go{
-      background:linear-gradient(135deg,#fff 0%, #e8f8ff 50%, #d1f4ff 100%);
-      border:2px solid var(--accent);
-    }
+    .tile .name{text-align:center;font-size:12px;padding:0 4px;color:#37474f;}
+    .tile.go{background:linear-gradient(135deg,#fff 0%, #e8f8ff 50%, #d1f4ff 100%);border:2px solid var(--accent);}
 
     /* Token centered inside tile */
     .token{
-      width:20px;height:20px;border-radius:50%;
-      background:var(--brand-blue);
-      border:2px solid #fff;
-      box-shadow:0 2px 6px rgba(0,0,0,0.2);
-      position:absolute;
-      top:50%;left:50%;transform:translate(-50%, -50%);
-      pointer-events:none;
-      z-index:2;
+      width:20px;height:20px;border-radius:50%;background:var(--brand-blue);
+      border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.2);
+      position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);
+      pointer-events:none;z-index:2;
     }
 
-    /* Centered overlay HUD (controls/stats only) */
+    /* Centered overlay HUD (controls/stats) */
     .overlay{
-      position:absolute;inset:0;
-      display:grid;place-items:center;
-      z-index:4;
-      pointer-events:none; /* allow clicks through except on HUD */
+      position:absolute;inset:0;display:grid;place-items:center;z-index:4;
     }
     .hud{
-      width:min(92%, 420px);
-      display:flex;flex-direction:column;gap:12px;
-      background:#ffffffcc;
-      backdrop-filter:saturate(135%) blur(2px);
-      border:1px solid var(--ring);
-      border-radius:14px;
-      padding:14px;
+      width:min(92%, 420px);display:flex;flex-direction:column;gap:12px;
+      background:#ffffffcc;backdrop-filter:saturate(135%) blur(2px);
+      border:1px solid var(--ring);border-radius:14px;padding:14px;
       box-shadow:0 8px 28px rgba(0,0,0,0.15);
-      pointer-events:auto; /* enable clicks */
     }
     .banner{
       font-size:13px;color:#274b5a;background:#eaf6fb;
       padding:8px;border-radius:8px;border:1px dashed var(--brand-blue);
     }
-    .panel{
-      border:1px solid var(--tile-border);
-      border-radius:10px;
-      padding:12px;
-      background:#fcfdff;
-    }
-    .controls{
-      display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;
-    }
+    .panel{border:1px solid var(--tile-border);border-radius:10px;padding:12px;background:#fcfdff;}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;}
     button{
-      appearance:none;border:none;border-radius:8px;
-      padding:10px 14px;font-weight:600;
-      background:var(--brand-blue);color:#fff;
-      cursor:pointer;
-      box-shadow:0 2px 6px rgba(0,0,0,0.12);
+      appearance:none;border:none;border-radius:8px;padding:10px 14px;font-weight:600;
+      background:var(--brand-blue);color:#fff;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.12);
     }
     button.secondary{background:#eceff1;color:#333;}
     button:disabled{opacity:.6;cursor:not-allowed;}
@@ -159,17 +99,16 @@
     .stat{display:flex;justify-content:space-between;font-size:14px;margin:6px 0;}
 
     /* Monopoly-style card popup */
+    .card-backdrop{
+      position:absolute;inset:0;background:rgba(0,0,0,0.25);
+      z-index:5;display:none;
+    }
+    .card-backdrop.show{display:block;}
     .card-modal{
-      position:absolute;
-      top:50%;left:50%;transform:translate(-50%, -50%) scale(0.98);
-      width:min(92%, 360px);
-      background:#fff;
-      border:2px solid var(--tile-border);
-      border-radius:14px;
-      box-shadow:0 12px 32px rgba(0,0,0,0.22);
-      padding:12px 14px;
-      z-index:6;
-      display:none;
+      position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);
+      width:min(92%, 340px);background:#fff;border:2px solid var(--tile-border);
+      border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.22);
+      padding:14px;z-index:6;display:none;
       animation:cardIn .18s ease-out;
     }
     .card-modal.show{display:block;}
@@ -177,15 +116,12 @@
       from{opacity:0;transform:translate(-50%, -48%) scale(0.95)}
       to{opacity:1;transform:translate(-50%, -50%) scale(1)}
     }
-    .card-header{
-      display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;
-    }
+    .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
     .chip{
-      display:inline-flex;align-items:center;gap:6px;
-      padding:6px 10px;border-radius:999px;font-size:12px;font-weight:700;
-      color:#08394f;background:#eaf6fb;border:1px dashed var(--brand-blue);
+      display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;
+      font-size:12px;font-weight:700;color:#08394f;background:#eaf6fb;border:1px dashed var(--brand-blue);
     }
-    .chip.link{background:#fff3e0;border-color:#f9a825;color:#7a4a00;} /* link card vibe */
+    .chip.link{background:#fff3e0;border-color:#f9a825;color:#7a4a00;}
     .close-btn{
       background:transparent;border:none;color:#274b5a;font-size:20px;line-height:1;
       padding:2px 6px;border-radius:6px;cursor:pointer;
@@ -195,10 +131,6 @@
     .card-link a{color:#0b7285;text-decoration:none;font-weight:600;}
     .card-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px;}
     .open-btn{background:var(--accent);color:#003a4a;}
-
-    footer{
-      padding:12px 16px;color:#68808e;font-size:12px;text-align:center;
-    }
   </style>
 </head>
 <body>
@@ -233,9 +165,10 @@
         </div>
 
         <!-- Monopoly-style card popup -->
+        <div id="cardBackdrop" class="card-backdrop" aria-hidden="true"></div>
         <div id="cardModal" class="card-modal" role="dialog" aria-modal="true" aria-labelledby="cardTitle" aria-describedby="cardText">
           <div class="card-header">
-            <div id="cardChip" class="chip">AI Card</div>
+            <div id="cardChip" class="chip">Concept Card</div>
             <button id="cardClose" class="close-btn" aria-label="Close card">×</button>
           </div>
           <h3 id="cardTitle" class="card-title">Title</h3>
@@ -268,6 +201,7 @@
     const diceFaceEl = document.getElementById('diceFace');
 
     // Card modal elements
+    const cardBackdropEl = document.getElementById('cardBackdrop');
     const cardModalEl = document.getElementById('cardModal');
     const cardChipEl = document.getElementById('cardChip');
     const cardTitleEl = document.getElementById('cardTitle');
@@ -282,7 +216,7 @@
 
     // Activities: mix of facts and links.
     const activities = [
-      {type:'fact', title:'Welcome to Go.', text:'Start here. Complete one lap to finish the game.'},
+      {type:'fact', title:'Welcome to Go!!', text:'Start here. Complete one lap to finish the game.'},
       {type:'link', title:'Cisco Homepage.', url:'https://www.cisco.com/'},
       {type:'fact', title:'What is AI?', text:'AI enables computers to perform tasks that typically require human intelligence.'},
       {type:'fact', title:'Machine Learning.', text:'ML finds patterns in data to make predictions or decisions.'},
@@ -402,8 +336,15 @@
     function showStatus(text){ statusEl.textContent = text; }
 
     // Card modal helpers
-    function openCard(){ cardModalEl.classList.add('show'); cardCloseEl.focus(); }
-    function closeCard(){ cardModalEl.classList.remove('show'); }
+    function openCard(){
+      cardBackdropEl.classList.add('show');
+      cardModalEl.classList.add('show');
+      cardCloseEl.focus();
+    }
+    function closeCard(){
+      cardBackdropEl.classList.remove('show');
+      cardModalEl.classList.remove('show');
+    }
 
     function showCard(index, finishedMessage=false){
       const item = activities[index];
@@ -511,12 +452,16 @@
       placeToken(0);
       rollBtn.disabled = false;
       closeCard();
+      // Show starting card again
+      showCard(0);
     }
 
     // Init
     buildBoard();
     placeToken(0);
     updateHUD();
+    // Show the Go card when the game loads
+    showCard(0);
 
     // Events
     rollBtn.addEventListener('click', handleRoll);
@@ -525,9 +470,8 @@
     // Card close events
     cardCloseEl.addEventListener('click', closeCard);
     cardClose2El.addEventListener('click', closeCard);
-    document.addEventListener('keydown', (e)=>{
-      if(e.key === 'Escape'){ closeCard(); }
-    });
+    cardBackdropEl.addEventListener('click', closeCard);
+    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape'){ closeCard(); } });
   </script>
 </body>
 </html>
