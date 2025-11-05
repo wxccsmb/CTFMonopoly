@@ -15,7 +15,6 @@
       --text:#1f2d3d;
       --ring:#d7e6ee;
       --overlay-offset: 0px; /* JS will set this. */
-      --board-offset-y: 0px; 
     }
     *{box-sizing:border-box;}
     body{
@@ -63,7 +62,7 @@ overflow-y:hidden;
       background:radial-gradient(circle at 50% 50%, #f8fbfd 0%, #ffffff 60%);
       border-radius:8px;overflow:hidden;
       /* JS sets explicit width/height to ensure full board is visible */
-      transform: translateY(var(--board-offset-y));
+      transform:translateY(-80px); / Move the board up by 80px; adjust value as needed. */
     }
     .tile{
       background:var(--tile-bg);border:1px solid var(--tile-border);
@@ -215,9 +214,6 @@ to{opacity:1;transform:translate(-50%, calc(-50% + var(--overlay-offset))) scale
     const movesEl = document.getElementById('moves');
     const statusEl = document.getElementById('status');
     const diceFaceEl = document.getElementById('diceFace');
-    // How many board tiles to move the whole board upward.
-// Negative offset moves up; positive would move down.
-const BOARD_SHIFT_TILES = 2; // Change to any integer (e.g., 1–4) as desired.
 
     // Card modal elements
     const cardBackdropEl = document.getElementById('cardBackdrop');
@@ -336,7 +332,6 @@ const mainPaddingY = 32; // main has 16px top + 16px bottom
 const availableHeight = Math.max(320, window.innerHeight - headerHeight - mainPaddingY);
 
 
-
 // Measure the wrapper’s inner content width (exclude its paddings).
 const styles = getComputedStyle(boardWrapperEl);
 const padL = parseFloat(styles.paddingLeft) || 0;
@@ -344,7 +339,7 @@ const padR = parseFloat(styles.paddingRight) || 0;
 // clientWidth includes paddings; subtract them to get the content box width.
 const contentWidth = Math.max(0, boardWrapperEl.clientWidth - padL - padR);
 
-// Size the board to the smaller of available height or content width.
+
 const size = Math.floor(Math.min(contentWidth, availableHeight));
 boardEl.style.width = size + 'px';
 boardEl.style.height = size + 'px';
@@ -353,8 +348,8 @@ boardEl.style.height = size + 'px';
 // If you’re using the overlay offset by tiles, keep this (otherwise remove):
 if (typeof SPACES_UP !== 'undefined') {
 const tileHeight = size / 11;
-const boardOffsetPx = -(tileHeight * BOARD_SHIFT_TILES); // negative = up
-boardEl.style.setProperty('--board-offset-y', boardOffsetPx + 'px');
+const offsetPx = -(tileHeight * SPACES_UP);
+boardEl.style.setProperty('--overlay-offset', offsetPx + 'px');
 }
 }
 
@@ -509,7 +504,8 @@ boardEl.style.setProperty('--board-offset-y', boardOffsetPx + 'px');
     updateHUD();
     showCard(0);
     fitBoardToViewport();
-
+    window.addEventListener('resize', fitBoardToViewport);
+window.addEventListener('orientationchange', fitBoardToViewport);
 
     // Events
     rollBtn.addEventListener('click', handleRoll);
