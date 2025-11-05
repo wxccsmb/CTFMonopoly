@@ -14,6 +14,7 @@
       --accent:#00C1D4;
       --text:#1f2d3d;
       --ring:#d7e6ee;
+      --card-orange:#ffb74d; /* Monopoly-card vibe accent. */
     }
     *{box-sizing:border-box;}
     body{
@@ -66,7 +67,7 @@
       display:grid;
       grid-template-columns:repeat(11, 1fr);
       grid-template-rows:repeat(11, 1fr);
-      position:relative; /* Anchor overlay */
+      position:relative; /* Anchor overlay and card */
       background:radial-gradient(circle at 50% 50%, #f8fbfd 0%, #ffffff 60%);
       border-radius:8px;
       overflow:hidden;
@@ -114,21 +115,27 @@
       z-index:2;
     }
 
-    /* Centered overlay HUD */
+    /* Centered overlay HUD (controls/stats only) */
     .overlay{
       position:absolute;inset:0;
       display:grid;place-items:center;
-      z-index:5;
+      z-index:4;
+      pointer-events:none; /* allow clicks through except on HUD */
     }
     .hud{
       width:min(92%, 420px);
       display:flex;flex-direction:column;gap:12px;
-      background:#ffffffcc; /* slightly translucent */
+      background:#ffffffcc;
       backdrop-filter:saturate(135%) blur(2px);
       border:1px solid var(--ring);
       border-radius:14px;
       padding:14px;
       box-shadow:0 8px 28px rgba(0,0,0,0.15);
+      pointer-events:auto; /* enable clicks */
+    }
+    .banner{
+      font-size:13px;color:#274b5a;background:#eaf6fb;
+      padding:8px;border-radius:8px;border:1px dashed var(--brand-blue);
     }
     .panel{
       border:1px solid var(--tile-border);
@@ -136,13 +143,8 @@
       padding:12px;
       background:#fcfdff;
     }
-    .banner{
-      font-size:13px;color:#274b5a;background:#eaf6fb;
-      padding:8px;border-radius:8px;border:1px dashed var(--brand-blue);
-    }
     .controls{
-      display:flex;gap:8px;flex-wrap:wrap;align-items:center;
-      margin-bottom:8px;
+      display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;
     }
     button{
       appearance:none;border:none;border-radius:8px;
@@ -155,9 +157,44 @@
     button:disabled{opacity:.6;cursor:not-allowed;}
     .dice-face{font-size:28px;line-height:1;}
     .stat{display:flex;justify-content:space-between;font-size:14px;margin:6px 0;}
-    .activity h3{margin:0 0 8px 0;font-size:16px;}
-    .activity p{margin:0 0 8px 0;font-size:14px;color:#455a64;}
-    .activity a{color:#0b7285;text-decoration:none;font-weight:600;}
+
+    /* Monopoly-style card popup */
+    .card-modal{
+      position:absolute;
+      top:50%;left:50%;transform:translate(-50%, -50%) scale(0.98);
+      width:min(92%, 360px);
+      background:#fff;
+      border:2px solid var(--tile-border);
+      border-radius:14px;
+      box-shadow:0 12px 32px rgba(0,0,0,0.22);
+      padding:12px 14px;
+      z-index:6;
+      display:none;
+      animation:cardIn .18s ease-out;
+    }
+    .card-modal.show{display:block;}
+    @keyframes cardIn{
+      from{opacity:0;transform:translate(-50%, -48%) scale(0.95)}
+      to{opacity:1;transform:translate(-50%, -50%) scale(1)}
+    }
+    .card-header{
+      display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;
+    }
+    .chip{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:6px 10px;border-radius:999px;font-size:12px;font-weight:700;
+      color:#08394f;background:#eaf6fb;border:1px dashed var(--brand-blue);
+    }
+    .chip.link{background:#fff3e0;border-color:#f9a825;color:#7a4a00;} /* link card vibe */
+    .close-btn{
+      background:transparent;border:none;color:#274b5a;font-size:20px;line-height:1;
+      padding:2px 6px;border-radius:6px;cursor:pointer;
+    }
+    .card-title{margin:6px 0 8px 0;font-size:18px;color:#05334c;}
+    .card-text{margin:0 0 10px 0;font-size:14px;color:#455a64;}
+    .card-link a{color:#0b7285;text-decoration:none;font-weight:600;}
+    .card-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px;}
+    .open-btn{background:var(--accent);color:#003a4a;}
 
     footer{
       padding:12px 16px;color:#68808e;font-size:12px;text-align:center;
@@ -176,7 +213,7 @@
   <main>
     <section class="board-wrapper">
       <div id="board" class="board" aria-label="Monopoly-style board">
-        <!-- Centered overlay with controls and activity -->
+        <!-- Centered overlay with controls and stats -->
         <div class="overlay">
           <div class="hud">
             <div class="panel banner">
@@ -192,16 +229,25 @@
               <div class="stat"><span>Moves:</span><strong id="moves">0</strong></div>
               <div class="stat"><span>Status:</span><strong id="status">Ready.</strong></div>
             </div>
-            <div class="panel activity">
-              <h3 id="activityTitle">Welcome to the board.</h3>
-              <p id="activityText">Roll to begin your journey. Each space reveals a fact or a link.</p>
-              <p id="activityLinkWrap" style="display:none;">
-                Link: <a id="activityLink" href="#" target="_blank" rel="noopener">Open resource.</a>
-              </p>
-            </div>
           </div>
         </div>
-        <!-- Tiles render behind this overlay -->
+
+        <!-- Monopoly-style card popup -->
+        <div id="cardModal" class="card-modal" role="dialog" aria-modal="true" aria-labelledby="cardTitle" aria-describedby="cardText">
+          <div class="card-header">
+            <div id="cardChip" class="chip">AI Card</div>
+            <button id="cardClose" class="close-btn" aria-label="Close card">×</button>
+          </div>
+          <h3 id="cardTitle" class="card-title">Title</h3>
+          <p id="cardText" class="card-text">Content.</p>
+          <p id="cardLinkWrap" class="card-link" style="display:none;">
+            Link: <a id="cardLink" href="#" target="_blank" rel="noopener">Open resource.</a>
+          </p>
+          <div class="card-actions">
+            <button id="cardClose2" class="secondary" aria-label="Close card">Close</button>
+            <a id="cardOpenBtn" class="button open-btn" href="#" target="_blank" rel="noopener" style="display:none;">Open</a>
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -221,53 +267,59 @@
     const statusEl = document.getElementById('status');
     const diceFaceEl = document.getElementById('diceFace');
 
-    const activityTitleEl = document.getElementById('activityTitle');
-    const activityTextEl = document.getElementById('activityText');
-    const activityLinkWrapEl = document.getElementById('activityLinkWrap');
-    const activityLinkEl = document.getElementById('activityLink');
+    // Card modal elements
+    const cardModalEl = document.getElementById('cardModal');
+    const cardChipEl = document.getElementById('cardChip');
+    const cardTitleEl = document.getElementById('cardTitle');
+    const cardTextEl = document.getElementById('cardText');
+    const cardLinkWrapEl = document.getElementById('cardLinkWrap');
+    const cardLinkEl = document.getElementById('cardLink');
+    const cardOpenBtnEl = document.getElementById('cardOpenBtn');
+    const cardCloseEl = document.getElementById('cardClose');
+    const cardClose2El = document.getElementById('cardClose2');
 
     const diceFaces = ['⚀','⚁','⚂','⚃','⚄','⚅'];
 
     // Activities: mix of facts and links.
     const activities = [
-      {type:'fact', title:'Welcome to GO!!', text:'Start here. Complete one lap to finish the game.'},
-      {type:'link', title:'Explore what Generative AI is.', url:'https://www.cisco.com/'},
+      {type:'fact', title:'Welcome to Go.', text:'Start here. Complete one lap to finish the game.'},
+      {type:'link', title:'Cisco Homepage.', url:'https://www.cisco.com/'},
       {type:'fact', title:'What is AI?', text:'AI enables computers to perform tasks that typically require human intelligence.'},
       {type:'fact', title:'Machine Learning.', text:'ML finds patterns in data to make predictions or decisions.'},
-      {type:'link', title:'Learn About AI Bias.', url:'https://oecd.ai/'},
+      {type:'link', title:'OECD AI Policy Observatory.', url:'https://oecd.ai/'},
       {type:'fact', title:'Neural Networks.', text:'Neural networks approximate complex functions using layers of parameters.'},
       {type:'link', title:'UNESCO AI Overview.', url:'https://www.unesco.org/en/artificial-intelligence'},
       {type:'fact', title:'Responsible AI.', text:'Responsible AI prioritizes transparency, fairness, and accountability.'},
-      {type:'link', title:'Explore AI in Collaboration tools.', url:'https://www.nist.gov/itl/ai-risk-management-framework'},
-      {type:'fact', title:'Use AI summarization tool.', text:'Quality data often matters more than model complexity.'},
-      {type:'fact', title:'AI Corner.', text:'Corners mark key milestones. Keep rolling.'},
-      {type:'link', title:'Learn about AI Infrastructure.', url:'https://aiindex.stanford.edu/'},
+      {type:'link', title:'NIST AI RMF.', url:'https://www.nist.gov/itl/ai-risk-management-framework'},
+      {type:'fact', title:'Data Quality.', text:'Quality data often matters more than model complexity.'},
+      {type:'fact', title:'Go Corner.', text:'Corners mark key milestones. Keep rolling.'},
+      {type:'link', title:'Stanford AI Index.', url:'https://aiindex.stanford.edu/'},
       {type:'fact', title:'Bias in AI.', text:'Bias can enter AI systems from data, design, or deployment.'},
-      {type:'fact', title:'Exolore AI in Customer Experience.', text:'Inference is using a trained model to make predictions.'},
-      {type:'fact', title:'AI Training.', text:'Training adjusts parameters to minimize error on data.'},
-      {type:'link', title:'Understand AI Governance', url:'https://data.gov/'},
-      {type:'fact', title:'Try AI-Powered Chatbots.', text:'Edge AI runs models close to where data is generated.'},
-      {type:'fact', title:'Explore AI for Career development', text:'Explainability helps users understand model outputs.'},
+      {type:'fact', title:'Inference.', text:'Inference is using a trained model to make predictions.'},
+      {type:'fact', title:'Training.', text:'Training adjusts parameters to minimize error on data.'},
+      {type:'link', title:'Open Data Portals.', url:'https://data.gov/'},
+      {type:'fact', title:'Edge AI.', text:'Edge AI runs models close to where data is generated.'},
+      {type:'fact', title:'Explainability.', text:'Explainability helps users understand model outputs.'},
       {type:'link', title:'Khan Academy – AI Basics.', url:'https://www.khanacademy.org/computing/computer-science'},
-      {type:'fact', title:'Understand AI in Fraud Detection', text:'Efficient models reduce cost and environmental impact.'},
-      {type:'fact', title:'Understand AI-Driven Data Loss Prevention', text:'You are progressing well. Stay curious.'},
+      {type:'fact', title:'Energy Efficiency.', text:'Efficient models reduce cost and environmental impact.'},
+      {type:'fact', title:'Top-left Corner.', text:'You are progressing well. Stay curious.'},
       {type:'link', title:'W3C Web Accessibility.', url:'https://www.w3.org/WAI/'},
       {type:'fact', title:'Accessibility.', text:'Accessible AI and interfaces benefit everyone.'},
-      {type:'fact', title:'Use an AI to look for flights.', text:'Classification predicts categories; regression predicts numbers.'},
-      {type:'link', title:'Use AI to plan your meals', url:'https://www.cdc.gov/dataviz/'},
-      {type:'fact', title:'Cisco AI Framework', text:'Privacy-by-design supports trust in AI systems.'},
-      {type:'fact', title:'Practice Ethical AI Prompting', text:'Robust systems handle diverse inputs and edge cases.'},
-      {type:'link', title:'Use AI to design a room', url:'https://creativecommons.org/'},
-      {type:'fact', title:'Try AI-Powered Presentation creation', text:'Human oversight can improve outcomes and safety.'},
+      {type:'fact', title:'Classification vs. Regression.', text:'Classification predicts categories; regression predicts numbers.'},
+      {type:'link', title:'CDC Data Visualizations.', url:'https://www.cdc.gov/dataviz/'},
+      {type:'fact', title:'Privacy.', text:'Privacy-by-design supports trust in AI systems.'},
+      {type:'fact', title:'Robustness.', text:'Robust systems handle diverse inputs and edge cases.'},
+      {type:'link', title:'Creative Commons – Open Licensing.', url:'https://creativecommons.org/'},
+      {type:'fact', title:'Human-in-the-Loop.', text:'Human oversight can improve outcomes and safety.'},
       {type:'fact', title:'Top-right Corner.', text:'One side left. Keep going.'},
-      {type:'link', title:'Try AI-powered text to image.', url:'https://docs.github.com/en/pages'},
-      {type:'fact', title:'Understan AI impact on work.', text:'APIs let applications communicate and integrate AI services.'},
-      {type:'fact', title:'Explore AI in Cisco Crisis Response ', text:'Choose metrics aligned with real-world goals, not just accuracy.'},
+      {type:'link', title:'GitHub Pages Guide.', url:'https://docs.github.com/en/pages'},
+      {type:'fact', title:'APIs.', text:'APIs let applications communicate and integrate AI services.'},
+      {type:'fact', title:'Metrics.', text:'Choose metrics aligned with real-world goals, not just accuracy.'},
       {type:'link', title:'OECD – AI Principles.', url:'https://oecd.ai/en/ai-principles'},
-      {type:'fact', title:'Use AI for career development.', text:'Secure AI systems protect data, models, and infrastructure.'},
-      {type:'fact', title:'Try Voice-to-Text AI.', text:'Consider impacts on different users and groups.'},
+      {type:'fact', title:'Security.', text:'Secure AI systems protect data, models, and infrastructure.'},
+      {type:'fact', title:'Fairness.', text:'Consider impacts on different users and groups.'},
       {type:'link', title:'US Digital Services Playbook.', url:'https://playbook.cio.gov/'},
-      {type:'fact', title:'Explore AI in Digital Experience', text:'Monitor models after deployment to catch drift.'},
+      {type:'fact', title:'Deployment.', text:'Monitor models after deployment to catch drift.'},
       {type:'fact', title:'Evaluation.', text:'Evaluate with representative datasets and scenarios.'},
       {type:'link', title:'Cisco – Add Your AI Page URL.', url:'#'},
       {type:'fact', title:'Pass Go.', text:'Crossing Go completes your lap. Great job!'}
@@ -349,35 +401,60 @@
 
     function showStatus(text){ statusEl.textContent = text; }
 
-    function showActivity(index){
+    // Card modal helpers
+    function openCard(){ cardModalEl.classList.add('show'); cardCloseEl.focus(); }
+    function closeCard(){ cardModalEl.classList.remove('show'); }
+
+    function showCard(index, finishedMessage=false){
       const item = activities[index];
-      if(!item){
-        activityTitleEl.textContent = 'No activity.';
-        activityTextEl.textContent = 'This tile has no content.';
-        activityLinkWrapEl.style.display = 'none';
+      if(finishedMessage){
+        cardChipEl.className = 'chip';
+        cardChipEl.textContent = 'AI Card';
+        cardTitleEl.textContent = 'You Passed Go!';
+        cardTextEl.textContent = 'Game complete—thanks for playing.';
+        cardLinkWrapEl.style.display = 'none';
+        cardOpenBtnEl.style.display = 'none';
+        openCard();
         return;
       }
-      activityTitleEl.textContent = item.title;
-      if(item.type === 'fact'){
-        activityTextEl.textContent = item.text || '';
-        activityLinkWrapEl.style.display = 'none';
-      } else if(item.type === 'link'){
-        activityTextEl.textContent = 'Explore the resource and note one insight you found.';
-        activityLinkEl.textContent = 'Open resource.';
-        activityLinkEl.href = item.url || '#';
-        activityLinkWrapEl.style.display = 'block';
-      } else {
-        activityTextEl.textContent = '';
-        activityLinkWrapEl.style.display = 'none';
+
+      if(!item){
+        cardChipEl.className = 'chip';
+        cardChipEl.textContent = 'AI Card';
+        cardTitleEl.textContent = 'No activity.';
+        cardTextEl.textContent = 'This tile has no content.';
+        cardLinkWrapEl.style.display = 'none';
+        cardOpenBtnEl.style.display = 'none';
+        openCard();
+        return;
       }
+
+      const isLink = item.type === 'link';
+      cardChipEl.className = isLink ? 'chip link' : 'chip';
+      cardChipEl.textContent = isLink ? 'Resource Card' : 'Concept Card';
+
+      cardTitleEl.textContent = item.title || 'Activity';
+      if(isLink){
+        cardTextEl.textContent = 'Explore the resource and note one insight you found.';
+        const href = item.url || '#';
+        cardLinkEl.textContent = 'Open resource.';
+        cardLinkEl.href = href;
+        cardLinkWrapEl.style.display = 'block';
+        cardOpenBtnEl.href = href;
+        cardOpenBtnEl.style.display = 'inline-flex';
+      } else {
+        cardTextEl.textContent = item.text || '';
+        cardLinkWrapEl.style.display = 'none';
+        cardOpenBtnEl.style.display = 'none';
+      }
+
+      openCard();
     }
 
     function finishGame(){
       finished = true;
       showStatus('You passed Go. Game complete!');
-      activityTitleEl.textContent = 'You Passed Go!';
-      activityTextEl.textContent = 'Your Flag is  CTF-AIForEveryone-2026';
-      activityLinkWrapEl.style.display = 'none';
+      showCard(0, true);
       rollBtn.disabled = true;
     }
 
@@ -419,7 +496,7 @@
         finishGame();
       } else {
         showStatus('Landed on tile ' + position + '.');
-        showActivity(position);
+        showCard(position);
         rollBtn.disabled = false;
       }
     }
@@ -431,20 +508,26 @@
       diceFaceEl.textContent = '–';
       updateHUD();
       showStatus('Ready.');
-      showActivity(0);
       placeToken(0);
       rollBtn.disabled = false;
+      closeCard();
     }
 
     // Init
     buildBoard();
     placeToken(0);
-    showActivity(0);
     updateHUD();
 
     // Events
     rollBtn.addEventListener('click', handleRoll);
     resetBtn.addEventListener('click', resetGame);
+
+    // Card close events
+    cardCloseEl.addEventListener('click', closeCard);
+    cardClose2El.addEventListener('click', closeCard);
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape'){ closeCard(); }
+    });
   </script>
 </body>
 </html>
