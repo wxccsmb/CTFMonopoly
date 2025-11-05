@@ -40,18 +40,20 @@
 
     main{padding:16px;max-width:1200px;margin:0 auto;}
 
-    /* Board */
+    /* Board wrapper centers the board; board will be sized by JS to fit viewport */
     .board-wrapper{
       background:#fff;border:2px solid var(--tile-border);border-radius:12px;
       padding:16px;box-shadow:0 6px 20px rgba(0,0,0,0.08);overflow:hidden;
+      display:flex;align-items:center;justify-content:center;
     }
     .board{
-      width:100%;aspect-ratio:1/1;display:grid;
+      display:grid;
       grid-template-columns:repeat(11, 1fr);
       grid-template-rows:repeat(11, 1fr);
       position:relative; /* Anchor overlay and card */
       background:radial-gradient(circle at 50% 50%, #f8fbfd 0%, #ffffff 60%);
       border-radius:8px;overflow:hidden;
+      /* JS sets explicit width/height to ensure full board is visible */
     }
     .tile{
       background:var(--tile-bg);border:1px solid var(--tile-border);
@@ -73,15 +75,17 @@
       pointer-events:none;z-index:2;
     }
 
-    /* Centered overlay HUD (controls/stats) */
+    /* Centered overlay HUD (controls/stats only) */
     .overlay{
       position:absolute;inset:0;display:grid;place-items:center;z-index:4;
+      pointer-events:none;
     }
     .hud{
       width:min(92%, 420px);display:flex;flex-direction:column;gap:12px;
       background:#ffffffcc;backdrop-filter:saturate(135%) blur(2px);
       border:1px solid var(--ring);border-radius:14px;padding:14px;
       box-shadow:0 8px 28px rgba(0,0,0,0.15);
+      pointer-events:auto;
     }
     .banner{
       font-size:13px;color:#274b5a;background:#eaf6fb;
@@ -108,8 +112,7 @@
       position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);
       width:min(92%, 340px);background:#fff;border:2px solid var(--tile-border);
       border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.22);
-      padding:14px;z-index:6;display:none;
-      animation:cardIn .18s ease-out;
+      padding:14px;z-index:6;display:none;animation:cardIn .18s ease-out;
     }
     .card-modal.show{display:block;}
     @keyframes cardIn{
@@ -192,6 +195,8 @@
   <script>
     // Board and game config
     const BOARD_SIZE = 40;
+    const headerEl = document.querySelector('header');
+    const boardWrapperEl = document.querySelector('.board-wrapper');
     const boardEl = document.getElementById('board');
     const rollBtn = document.getElementById('rollBtn');
     const resetBtn = document.getElementById('resetBtn');
@@ -214,7 +219,7 @@
 
     const diceFaces = ['⚀','⚁','⚂','⚃','⚄','⚅'];
 
-    // Activities: mix of facts and links.
+    // Activities
     const activities = [
       {type:'fact', title:'Welcome to Go!!', text:'Start here. Complete one lap to finish the game.'},
       {type:'link', title:'Cisco Homepage.', url:'https://www.cisco.com/'},
@@ -308,6 +313,18 @@
         boardEl.appendChild(div);
         tiles.push(div);
       }
+    }
+
+    // Responsive: size the square board to fit viewport height and wrapper width
+    function fitBoardToViewport(){
+      const wrapperPadding = 16; // matches .board-wrapper padding
+      const headerHeight = headerEl.offsetHeight || 0;
+      const mainPadding = 32;    // main has 16px top + 16px bottom
+      const availableHeight = Math.max(320, window.innerHeight - headerHeight - mainPadding);
+      const availableWidth = Math.max(320, boardWrapperEl.clientWidth - wrapperPadding*2);
+      const size = Math.min(availableWidth, availableHeight);
+      boardEl.style.width = size + 'px';
+      boardEl.style.height = size + 'px';
     }
 
     // Token (player piece)
@@ -452,7 +469,6 @@
       placeToken(0);
       rollBtn.disabled = false;
       closeCard();
-      // Show starting card again
       showCard(0);
     }
 
@@ -460,18 +476,19 @@
     buildBoard();
     placeToken(0);
     updateHUD();
-    // Show the Go card when the game loads
     showCard(0);
+    fitBoardToViewport();
 
     // Events
     rollBtn.addEventListener('click', handleRoll);
     resetBtn.addEventListener('click', resetGame);
-
-    // Card close events
     cardCloseEl.addEventListener('click', closeCard);
     cardClose2El.addEventListener('click', closeCard);
     cardBackdropEl.addEventListener('click', closeCard);
-    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape'){ closeCard(); } });
+
+    // Responsive sizing
+    window.addEventListener('resize', fitBoardToViewport);
+    window.addEventListener('orientationchange', fitBoardToViewport);
   </script>
 </body>
 </html>
