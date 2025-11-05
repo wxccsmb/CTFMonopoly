@@ -43,10 +43,16 @@
 
     /* Board wrapper centers the board; board will be sized by JS to fit viewport */
     .board-wrapper{
-      background:#fff;border:2px solid var(--tile-border);border-radius:12px;
-      padding:16px;box-shadow:0 6px 20px rgba(0,0,0,0.08);overflow:hidden;
-      display:flex;align-items:center;justify-content:center;
-    }
+background:#fff;
+border:2px solid var(--tile-border);
+border-radius:12px;
+padding:16px 24px 16px 12px; /* Optional: a bit more space on the right. /
+box-shadow:0 6px 20px rgba(0,0,0,0.08);
+overflow:hidden;
+display:flex;
+align-items:center;
+justify-content:flex-start; / Left-align the board. */
+}
     .board{
       display:grid;
       grid-template-columns:repeat(11, 1fr);
