@@ -39,7 +39,7 @@
       padding:8px 12px;border:1px solid #2d6d8a;border-radius:8px;background:#084861;
     }
 
-    main{padding:16px;max-width:1200px;margin:0 auto;}
+    main{padding:16px;max-width:1200px;margin:0 auto; position: relative;} /* ADDED: position: relative; to main for card modal positioning */
 
     /* Board wrapper centers the board; board will be sized by JS to fit viewport */
     .board-wrapper{
@@ -95,7 +95,6 @@ overflow-y:hidden;
       border:1px solid var(--ring);border-radius:14px;padding:14px;
       box-shadow:0 8px 28px rgba(0,0,0,0.15);
       pointer-events:auto;
-      /* ADD THIS LINE: Moves the HUD up by the calculated offset */
       transform: translateY(var(--overlay-offset)); 
     }
     .banner{
@@ -121,7 +120,6 @@ overflow-y:hidden;
     .card-backdrop.show{display:block;}
     .card-modal{
       position:absolute;top:50%;left:50%;
-      /* MODIFY THIS LINE: Moves the card modal up by the calculated offset */
       transform:translate(-50%, calc(-50% + var(--overlay-offset)));
       width:min(92%, 340px);background:#fff;border:2px solid var(--tile-border);
       border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.22);
@@ -179,26 +177,26 @@ overflow-y:hidden;
             </div>
           </div>
         </div>
-
-        <!-- Monopoly-style card popup -->
-        <div id="cardBackdrop" class="card-backdrop" aria-hidden="true"></div>
-        <div id="cardModal" class="card-modal" role="dialog" aria-modal="true" aria-labelledby="cardTitle" aria-describedby="cardText">
-          <div class="card-header">
-            <div id="cardChip" class="chip">Concept Card</div>
-            <button id="cardClose" class="close-btn" aria-label="Close card">Ã—</button>
-          </div>
-          <h3 id="cardTitle" class="card-title">Title</h3>
-          <p id="cardText" class="card-text">Content.</p>
-          <p id="cardLinkWrap" class="card-link" style="display:none;">
-            Link: <a id="cardLink" href="#" target="_blank" rel="noopener">Open resource.</a>
-          </p>
-          <div class="card-actions">
-            <button id="cardClose2" class="secondary" aria-label="Close card">Close</button>
-            <a id="cardOpenBtn" class="button open-btn" href="#" target="_blank" rel="noopener" style="display:none;">Open</a>
-          </div>
-        </div>
       </div>
     </section>
+
+    <!-- Monopoly-style card popup - MOVED OUT OF #board -->
+    <div id="cardBackdrop" class="card-backdrop" aria-hidden="true"></div>
+    <div id="cardModal" class="card-modal" role="dialog" aria-modal="true" aria-labelledby="cardTitle" aria-describedby="cardText">
+      <div class="card-header">
+        <div id="cardChip" class="chip">Concept Card</div>
+        <button id="cardClose" class="close-btn" aria-label="Close card">Ã—</button>
+      </div>
+      <h3 id="cardTitle" class="card-title">Title</h3>
+      <p id="cardText" class="card-text">Content.</p>
+      <p id="cardLinkWrap" class="card-link" style="display:none;">
+        Link: <a id="cardLink" href="#" target="_blank" rel="noopener">Open resource.</a>
+      </p>
+      <div class="card-actions">
+        <button id="cardClose2" class="secondary" aria-label="Close card">Close</button>
+        <a id="cardOpenBtn" class="button open-btn" href="#" target="_blank" rel="noopener" style="display:none;">Open</a>
+      </div>
+    </div>
   </main>
 
   <footer>
@@ -208,10 +206,9 @@ overflow-y:hidden;
   <script>
     // Board and game config
     const BOARD_SIZE = 40;
-    // MODIFIED: Changed SPACES_UP from 10 to a smaller value (e.g., 2)
-    // This controls how many "tile heights" the overlay content is shifted upwards.
-    // Adjust this value (e.g., 1, 1.5, 2) to fine-tune the vertical position.
-    const SPACES_UP = 2; 
+    // MODIFIED: Adjust SPACES_UP to control the vertical shift.
+    // A value of 1.5 or 2 is a good starting point.
+    const SPACES_UP = 1.5; 
     const headerEl = document.querySelector('header');
     const boardWrapperEl = document.querySelector('.board-wrapper');
     const boardEl = document.getElementById('board');
@@ -356,7 +353,8 @@ boardEl.style.height = size + 'px';
 if (typeof SPACES_UP !== 'undefined') {
 const tileHeight = size / 11;
 const offsetPx = -(tileHeight * SPACES_UP); // This calculates a negative offset
-boardEl.style.setProperty('--overlay-offset', offsetPx + 'px');
+// MODIFIED: Set --overlay-offset on the documentElement (html tag) for global access
+document.documentElement.style.setProperty('--overlay-offset', offsetPx + 'px');
 }
 }
 
