@@ -156,11 +156,25 @@ body {
 
 /* Custom Board and Tile Styling */
 #board-section {
-    display: grid;
-    gap: 2px; /* Small gap between tiles */
-    width: 100%;
+    display: grid; /* board-section itself is now a grid container for its direct children (tiles-wrapper, overlays) */
+    /* Removed gap: 2px; from board-section */
+    /* Removed width: 100%; as tiles-wrapper will handle it */
     aspect-ratio: 1 / 1; /* Keep board square */
 }
+
+/* NEW: Style for the tiles wrapper */
+#tiles-wrapper {
+    /* Inherits absolute inset-0 grid p-4 from HTML */
+    background-color: transparent; /* Ensure board background is visible */
+    z-index: 0; /* Ensure tiles are at the bottom layer */
+}
+
+/* Apply grid properties to the tiles-wrapper for the actual tiles */
+#tiles-wrapper.grid {
+    display: grid;
+    gap: 2px; /* Small gap between tiles */
+}
+
 
 .tile {
     position: relative;
