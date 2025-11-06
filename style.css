@@ -31,7 +31,6 @@ body {
 .p-8 { padding: 2rem; }
 .gap-8 { gap: 2rem; }
 .w-full { width: 100%; }
-/* Changed max-w-5xl to max-w-7xl here to make tiles bigger */
 .max-w-7xl { max-width: 80rem; } /* This corresponds to 1280px */
 .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
 .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
@@ -104,6 +103,7 @@ body {
 .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
 .z-10 { z-index: 10; }
 .z-20 { z-index: 20; }
+.z-30 { z-index: 30; } /* Increased z-index for the modal */
 .z-50 { z-index: 50; }
 .hidden { display: none; }
 .text-center { text-align: center; }
@@ -131,7 +131,6 @@ body {
     display: grid;
     /* Grid template columns/rows will be set by JS */
     gap: 2px; /* Small gap between tiles */
-    /* This max-width was previously 900px, but it's now effectively controlled by its parent's max-width */
     width: 100%;
     margin: 0 auto;
     aspect-ratio: 1 / 1; /* Keep board square */
@@ -191,7 +190,16 @@ body {
 }
 
 /* Modal Specifics */
+/* Removed 'fixed' and added 'absolute' and increased z-index */
 #modal {
+    position: absolute; /* Position relative to its parent (#board-section) */
+    inset: 0; /* Cover the entire parent */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5); /* bg-black bg-opacity-50 */
+    padding: 1rem; /* p-4 */
+    z-index: 30; /* Higher than player token (10) and game-won-overlay (20) */
     transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
 }
 #modal:not(.hidden) {
