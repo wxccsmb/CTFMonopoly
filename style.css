@@ -1,5 +1,18 @@
 /* style.css */
 
+/* Cisco-inspired Color Palette */
+:root {
+    --cisco-blue-dark: #004B6C; /* Darker Blue for borders, main accents */
+    --cisco-blue-medium: #0073B7; /* Classic Cisco Blue */
+    --cisco-blue-light: #E0F2F7; /* Very Light Blue for tile backgrounds */
+    --cisco-gray-dark: #333333; /* Dark text */
+    --cisco-gray-medium: #666666; /* Medium text */
+    --cisco-gray-light: #F0F0F0; /* Light background elements */
+    --cisco-green: #28A745; /* Success/Congratulations */
+    --cisco-red: #DC3545; /* Danger/Restart */
+    --cisco-white: #FFFFFF;
+}
+
 /* Basic Reset & Box Sizing */
 *, *::before, *::after {
     box-sizing: border-box;
@@ -7,23 +20,21 @@
     padding: 0;
 }
 
-html, body { /* Explicitly set html and body to 100% height */
-    height: 100%;
-    overflow: hidden; /* Prevent scrolling on the body itself */
-}
-
 body {
-    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-family: 'CiscoSans', 'Helvetica Neue', Helvetica, Arial, sans-serif; /* Prioritize a Cisco-like font */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     line-height: 1.5;
+    color: var(--cisco-gray-dark); /* Default text color */
 }
 
 /* Tailwind-like Utility Classes (mimicked) */
 .min-h-screen { min-height: 100vh; }
 .bg-gradient-to-br { background-image: linear-gradient(to bottom right, var(--tw-gradient-stops)); }
-.from-blue-100 { --tw-gradient-from: #dbeafe; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(219, 234, 254, 0)); }
-.to-indigo-200 { --tw-gradient-to: #c7d2fe; }
+/* Updated background gradient colors */
+.from-blue-100 { --tw-gradient-from: #EBF4F8; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(235, 244, 248, 0)); }
+.to-indigo-200 { --tw-gradient-to: #D8EBF3; }
+
 .flex { display: flex; }
 .flex-col { flex-direction: column; }
 .items-center { align-items: center; }
@@ -34,7 +45,7 @@ body {
 .p-8 { padding: 2rem; }
 .gap-8 { gap: 2rem; }
 .w-full { width: 100%; }
-/* Removed max-w-7xl from here as it's now applied dynamically to the board */
+.max-w-7xl { max-width: 80rem; }
 .mx-auto { margin-left: auto; margin-right: auto; }
 .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
 .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
@@ -54,25 +65,28 @@ body {
 .mt-6 { margin-top: 1.5rem; }
 .mt-4 { margin-top: 1rem; }
 .mt-2 { margin-top: 0.5rem; }
-.text-blue-800 { color: #1e40af; }
-.text-blue-700 { color: #1d4ed8; }
-.text-blue-600 { color: #2563eb; }
-.text-blue-500 { color: #3b82f6; }
-.text-green-600 { color: #16a34a; }
-.text-gray-800 { color: #1f2937; }
-.text-gray-700 { color: #374151; }
-.text-gray-600 { color: #4b5563; }
-.text-gray-500 { color: #6b7280; }
-.text-white { color: #fff; }
-.bg-blue-600 { background-color: #2563eb; }
-.hover\:bg-blue-700:hover { background-color: #1d4ed8; }
-.bg-purple-600 { background-color: #9333ea; }
-.hover\:bg-purple-700:hover { background-color: #7e22ce; }
-.bg-red-500 { background-color: #ef4444; }
-.hover\:bg-red-600:hover { background-color: #dc2626; }
-.bg-gray-100 { background-color: #f3f4f6; }
-.bg-white { background-color: #fff; }
-.bg-black { background-color: #000; }
+/* Updated text colors */
+.text-blue-800 { color: var(--cisco-blue-dark); }
+.text-blue-700 { color: var(--cisco-blue-medium); }
+.text-blue-600 { color: var(--cisco-blue-medium); }
+.text-blue-500 { color: var(--cisco-blue-medium); }
+.text-green-600 { color: var(--cisco-green); }
+.text-gray-800 { color: var(--cisco-gray-dark); }
+.text-gray-700 { color: var(--cisco-gray-medium); }
+.text-gray-600 { color: var(--cisco-gray-medium); }
+.text-gray-500 { color: var(--cisco-gray-medium); }
+.text-white { color: var(--cisco-white); }
+
+/* Updated button colors */
+.bg-blue-600 { background-color: var(--cisco-blue-medium); }
+.hover\:bg-blue-700:hover { background-color: var(--cisco-blue-dark); }
+.bg-purple-600 { background-color: var(--cisco-blue-dark); } /* Using dark blue for play again */
+.hover\:bg-purple-700:hover { background-color: var(--cisco-blue-medium); }
+.bg-red-500 { background-color: var(--cisco-red); }
+.hover\:bg-red-600:hover { background-color: #C82333; } /* Darker red */
+.bg-gray-100 { background-color: var(--cisco-gray-light); }
+.bg-white { background-color: var(--cisco-white); }
+.bg-black { background-color: rgba(0, 0, 0, 0.8); } /* Slightly darker overlay */
 .bg-opacity-50 { opacity: 0.5; }
 .bg-opacity-70 { opacity: 0.7; }
 .bg-opacity-90 { opacity: 0.9; }
@@ -85,13 +99,15 @@ body {
 .shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
 .drop-shadow-md { filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06)); }
 .drop-shadow-lg { filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1)); }
+
+/* Updated board border color */
 .border-8 { border-width: 8px; }
-.border-green-900 { border-color: #064e3b; }
+.border-green-900 { border-color: var(--cisco-blue-dark); } /* Board border is dark blue */
 .border { border-width: 1px; }
-.border-gray-300 { border-color: #d1d5db; }
-.border-blue-500 { border-color: #3b82f6; }
-.hover\:bg-gray-50:hover { background-color: #f9fafb; }
-.bg-blue-200 { background-color: #bfdbfe; }
+.border-gray-300 { border-color: var(--cisco-gray-light); }
+.border-blue-500 { border-color: var(--cisco-blue-medium); }
+.hover\:bg-gray-50:hover { background-color: var(--cisco-blue-light); } /* Hover effect on tiles */
+.bg-blue-200 { background-color: var(--cisco-blue-light); } /* Current tile background */
 .cursor-not-allowed { cursor: not-allowed; }
 .transition-all { transition-property: all; }
 .transition-colors { transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter; }
@@ -135,11 +151,6 @@ body {
 .-translate-x-1\/2 { transform: translateX(-50%); }
 .-translate-y-1\/2 { transform: translateY(-50%); }
 
-/* New utility classes for responsive sizing */
-.h-full { height: 100%; }
-.flex-grow { flex-grow: 1; }
-.flex-shrink-0 { flex-shrink: 0; }
-.max-h-full { max-height: 100%; }
 
 /* Custom Board and Tile Styling */
 #board-section {
@@ -147,92 +158,78 @@ body {
     gap: 2px; /* Small gap between tiles */
     width: 100%;
     aspect-ratio: 1 / 1; /* Keep board square */
-    /* Removed margin: 0 auto; as parent flexbox handles centering */
 }
-
-/* New class to dynamically size the board based on available space */
-.dynamic-board-size {
-    max-width: calc(100vh - 10rem); /* Max width based on viewport height minus header/padding */
-    max-height: calc(100vh - 10rem); /* Max height based on viewport height minus header/padding */
-    /* The 10rem is an estimate for header height + body padding. Adjust as needed. */
-    /* Using min(vw, vh) to make it fit both dimensions */
-    width: min(80vw, 80vh); /* Adjust 80vw/vh to control overall size relative to viewport */
-    height: min(80vw, 80vh);
-}
-
 
 .tile {
     position: relative;
     display: flex;
-    flex-direction: column; /* Allow content to stack if needed */
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    border: 1px solid #d1d5db; /* border-gray-300 */
-    background-color: #fff; /* bg-white */
-    padding: 0.5rem; /* p-2 */
+    border: 1px solid var(--cisco-gray-light); /* Light gray border */
+    background-color: var(--cisco-white); /* White background */
+    padding: 0.5rem;
     text-align: center;
-    font-size: 0.75rem; /* text-xs */
-    font-weight: 600; /* font-semibold */
-    color: #1f2937; /* text-gray-800 */
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--cisco-gray-dark); /* Dark gray text */
     transition: all 300ms ease-in-out;
-    aspect-ratio: 1 / 1; /* Ensures square aspect ratio */
-    overflow: hidden; /* Ensure nothing visually overflows the tile */
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
 }
 
-.tile p { /* Target the paragraph inside the tile */
-    word-break: break-word; /* Ensures long words break to fit */
-    max-height: 100%; /* Ensure text doesn't push beyond tile height */
-    overflow: hidden; /* Hide any overflow if text is too long even with wrapping */
+.tile p {
+    word-break: break-word;
+    max-height: 100%;
+    overflow: hidden;
 }
-
 
 .tile:hover {
-    background-color: #f9fafb; /* hover:bg-gray-50 */
+    background-color: var(--cisco-blue-light); /* Light blue on hover */
 }
 
 .tile.current {
-    background-color: #bfdbfe; /* bg-blue-200 */
-    border-color: #3b82f6; /* border-blue-500 */
-    transform: scale(1.05); /* scale-105 */
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
-    z-index: 1; /* Ensure current tile is above others for visual effect */
+    background-color: var(--cisco-blue-light); /* Light blue for current tile */
+    border-color: var(--cisco-blue-medium); /* Medium blue border for current tile */
+    transform: scale(1.05);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    z-index: 1;
 }
 
 .tile-id {
     position: absolute;
-    top: 0.25rem; /* top-1 */
-    left: 0.25rem; /* left-1 */
-    color: #6b7280; /* text-gray-500 */
-    font-size: 0.6rem; /* text-[0.6rem] */
+    top: 0.25rem;
+    left: 0.25rem;
+    color: var(--cisco-gray-medium); /* Medium gray for tile ID */
+    font-size: 0.6rem;
 }
 
 .player-token {
-    position: absolute;
-    background-color: #ef4444; /* bg-red-500 */
-    border-radius: 9999px; /* rounded-full */
-    width: 24px; /* w-6 */
-    height: 24px; /* h-6 */
+    background-color: var(--cisco-red); /* Red for player token, stands out */
+    border-radius: 9999px;
+    width: 24px;
+    height: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff; /* text-white */
-    font-size: 0.75rem; /* text-xs */
-    font-weight: 700; /* font-bold */
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+    color: var(--cisco-white);
+    font-size: 0.75rem;
+    font-weight: 700;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     z-index: 10;
-    transition: left 0.5s ease-in-out, top 0.5s ease-in-out; /* Smooth movement */
+    transition: left 0.5s ease-in-out, top 0.5s ease-in-out;
 }
 
 /* Modal Specifics */
 #modal {
-    position: absolute; /* Position relative to its parent (#board-section) */
-    inset: 0; /* Cover the entire parent */
+    position: absolute;
+    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.5); /* bg-black bg-opacity-50 */
-    padding: 1rem; /* p-4 */
-    z-index: 30; /* Higher than player token (10) and game-won-overlay (20) */
+    background-color: rgba(0, 0, 0, 0.6); /* Slightly darker overlay */
+    padding: 1rem;
+    z-index: 30;
     transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
 }
 #modal:not(.hidden) {
@@ -244,25 +241,26 @@ body {
     visibility: hidden;
 }
 
-#modal > div { /* The actual modal content box */
+#modal > div {
+    background-color: var(--cisco-white); /* White modal background */
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    max-width: 28rem; /* max-w-md */
+    width: 100%;
+    position: relative;
     transform: scale(1);
     transition: transform 0.3s ease-out;
 }
 #modal.hidden > div {
-    transform: scale(0.95); /* Slightly scale down when hidden */
+    transform: scale(0.95);
 }
 
 /* Responsive adjustments */
-/* No specific md:w- for board-section or controls-section anymore as controls-section is gone */
 @media (max-width: 767px) {
-    /* For smaller screens, allow body to scroll if content is too tall */
-    html, body {
-        overflow: auto;
-    }
-    .dynamic-board-size {
-        width: 90vw; /* Take up more width on small screens */
-        height: 90vw; /* Keep aspect ratio */
-        max-width: 100%;
-        max-height: 100%;
-    }
+    #game-container { flex-direction: column; }
+    #board-section { width: 100%; }
+}
+@media (min-width: 768px) {
+    #board-section { width: 100%; }
 }
