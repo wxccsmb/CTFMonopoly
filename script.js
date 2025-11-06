@@ -30,9 +30,9 @@ const tilesData = [
     { id: 25, title: "Predictive Analytics", type: "fact", content: "AI uses historical data to predict future outcomes, like market trends or equipment failures." },
     { id: 26, title: "Anomaly Detection", type: "fact", content: "AI can identify unusual patterns or outliers in data, useful for fraud detection or system monitoring." },
     { id: 27, title: "Recommender Systems", type: "fact", content: "AI-powered recommender systems suggest products, movies, or content based on user preferences." },
-    { id: 28, title: "AI in Education", type: "fact", content: "AI personalizes learning experiences, automates grading, and provides intelligent tutoring systems." },
+    { id: 28, title: "AI in Education", type: "fact", content: "AI personalizes learning experiences, automates grading, and provides intelligent tutoring systems."手間." },
     { id: 29, title: "AI in Finance", type: "fact", content: "AI aids in algorithmic trading, fraud detection, risk assessment, and personalized financial advice." },
-    { id: 30, "title": "Transfer Learning", "type": "fact", "content": "Transfer learning reuses a pre-trained model on a new, related task, saving time and resources." }, // Corner 3
+    { id: 30, title: "Transfer Learning", type: "fact", content: "Transfer learning reuses a pre-trained model on a new, related task, saving time and resources." }, // Corner 3
     { id: 31, title: "Data Augmentation", type: "fact", content: "Techniques to increase the amount of data by adding slightly modified copies of already existing data." },
     { id: 32, title: "Overfitting", type: "question", content: "What is overfitting in machine learning and how can it be mitigated?", link: "https://www.cisco.com/c/en/us/solutions/artificial-intelligence/what-is-overfitting.html" },
     { id: 33, title: "Underfitting", type: "fact", content: "Underfitting occurs when a model is too simple to capture the underlying patterns in the data." },
@@ -55,14 +55,20 @@ const BOARD_EDGE_LENGTH = 11; // 11 tiles per side, including corners
 
 // --- DOM Elements ---
 const boardSection = document.getElementById('board-section');
-const tilesWrapper = document.getElementById('tiles-wrapper'); // NEW: Get reference to the tiles wrapper
 const centralGameControls = document.getElementById('central-game-controls');
 const currentTileInfoDisplay = document.getElementById('current-tile-info');
 const rollDiceBtn = document.getElementById('roll-dice-btn');
 const lastRollDisplay = document.getElementById('last-roll-display');
 const gameWonOverlay = document.getElementById('game-won-overlay');
 const playAgainOverlayBtn = document.getElementById('play-again-overlay-btn');
-const restartGameBtn = document.getElementById('restart-game-btn');
+const restartGameBtn = document.getElementById('restart-game-btn'); // Reverted to target the button inside central-game-controls
+
+const modal = document.getElementById('modal');
+const modalCloseBtn = document.getElementById('modal-close-btn');
+const modalContinueBtn = document.getElementById('modal-continue-btn');
+const modalTitle = document.getElementById('modal-title');
+const modalContent = document.getElementById('modal-content');
+const modalLink = document.getElementById('modal-link');
 
 let playerToken; // Will be created dynamically
 
@@ -100,12 +106,12 @@ function getTileGridPosition(tileId) {
  * Renders or updates the game board and player token.
  */
 function renderBoard() {
-    // Clear only the tiles wrapper
-    tilesWrapper.innerHTML = '';
+    // Clear existing tiles, but keep central-game-controls, game-won-overlay, and modal
+    const existingTiles = boardSection.querySelectorAll('.tile');
+    existingTiles.forEach(tile => tile.remove());
 
-    // Apply grid styles to the tilesWrapper, not boardSection directly for tiles
-    tilesWrapper.style.gridTemplateColumns = `repeat(${BOARD_EDGE_LENGTH}, minmax(0, 1fr))`;
-    tilesWrapper.style.gridTemplateRows = `repeat(${BOARD_EDGE_LENGTH}, minmax(0, 1fr))`;
+    boardSection.style.gridTemplateColumns = `repeat(${BOARD_EDGE_LENGTH}, minmax(0, 1fr))`;
+    boardSection.style.gridTemplateRows = `repeat(${BOARD_EDGE_LENGTH}, minmax(0, 1fr))`;
 
     tilesData.forEach(tileData => {
         const tileElement = document.createElement('div');
@@ -130,19 +136,18 @@ function renderBoard() {
         tileElement.style.gridColumn = x + 1; // CSS grid is 1-indexed
         tileElement.style.gridRow = y + 1;
 
-        tilesWrapper.appendChild(tileElement); // Append tiles to the new wrapper
+        // Insert tiles before the central-game-controls, game-won-overlay, and modal
+        // This ensures overlays are always on top
+        boardSection.insertBefore(tileElement, centralGameControls);
     });
 
-    // Remove existing player token if it's still attached to the DOM
-    if (playerToken && playerToken.parentNode === boardSection) {
-        playerToken.remove();
+    // Render player token
+    if (!playerToken) {
+        playerToken = document.createElement('div');
+        playerToken.classList.add('player-token');
+        playerToken.textContent = 'P';
+        boardSection.appendChild(playerToken);
     }
-    // Create a new player token element and append it directly to boardSection
-    playerToken = document.createElement('div');
-    playerToken.classList.add('player-token');
-    playerToken.textContent = 'P';
-    boardSection.appendChild(playerToken);
-
     updatePlayerTokenPosition();
     updateCurrentTileInfo();
 }
@@ -154,13 +159,12 @@ function updatePlayerTokenPosition() {
     const currentTileElement = document.getElementById(`tile-${currentTileId}`);
     if (currentTileElement && playerToken) {
         // Calculate the center of the current tile element relative to the board section
-        // We need to account for the padding on tilesWrapper
-        const tilesWrapperRect = tilesWrapper.getBoundingClientRect();
+        const boardRect = boardSection.getBoundingClientRect();
         const tileRect = currentTileElement.getBoundingClientRect();
 
         const tokenSize = 24; // Player token width/height (from CSS)
-        const left = (tileRect.left - tilesWrapperRect.left) + (tileRect.width / 2) - (tokenSize / 2);
-        const top = (tileRect.top - tilesWrapperRect.top) + (tileRect.height / 2) - (tokenSize / 2);
+        const left = (tileRect.left - boardRect.left) + (tileRect.width / 2) - (tokenSize / 2);
+        const top = (tileRect.top - boardRect.top) + (tileRect.height / 2) - (tokenSize / 2);
 
         playerToken.style.left = `${left}px`;
         playerToken.style.top = `${top}px`;
