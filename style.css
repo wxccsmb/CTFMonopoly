@@ -217,6 +217,6 @@ body {
     #board-section { margin-bottom: 1rem; }
 }
 @media (min-width: 768px) {
-    #board-section { width: 75%; } /* md:w-3/4 */
-    #controls-section { width: 25%; } /* md:w-1/4 */
+    #board-section { width: 80%; } /* md:w-4/5 */
+    #controls-section { width: 20%; } /* md:w-1/5 */
 }
