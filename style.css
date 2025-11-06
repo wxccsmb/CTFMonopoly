@@ -7,7 +7,6 @@
     padding: 0;
 }
 
-/* Reverted html, body height and overflow */
 body {
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     -webkit-font-smoothing: antialiased;
@@ -22,7 +21,7 @@ body {
 .to-indigo-200 { --tw-gradient-to: #c7d2fe; }
 .flex { display: flex; }
 .flex-col { flex-direction: column; }
-/* Reverted game-container to not be flex-row */
+/* Removed md:flex-row as game-container is now single column */
 .items-center { align-items: center; }
 .justify-center { justify-content: center; }
 .justify-between { justify-content: space-between; }
@@ -132,12 +131,11 @@ body {
 .-translate-x-1\/2 { transform: translateX(-50%); }
 .-translate-y-1\/2 { transform: translateY(-50%); }
 
-/* Removed new utility classes for responsive sizing */
-/* Removed dynamic-board-size class and related styles */
 
 /* Custom Board and Tile Styling */
 #board-section {
     display: grid;
+    /* Grid template columns/rows will be set by JS */
     gap: 2px; /* Small gap between tiles */
     width: 100%;
     aspect-ratio: 1 / 1; /* Keep board square */
