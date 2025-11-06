@@ -55,12 +55,13 @@ const BOARD_EDGE_LENGTH = 11; // 11 tiles per side, including corners
 
 // --- DOM Elements ---
 const boardSection = document.getElementById('board-section');
-const currentTileInfoDisplay = document.getElementById('current-tile-info');
-const rollDiceBtn = document.getElementById('roll-dice-btn');
-const lastRollDisplay = document.getElementById('last-roll-display');
+const centralGameControls = document.getElementById('central-game-controls'); // New element
+const currentTileInfoDisplay = document.getElementById('current-tile-info'); // Moved to central controls
+const rollDiceBtn = document.getElementById('roll-dice-btn'); // Moved to central controls
+const lastRollDisplay = document.getElementById('last-roll-display'); // Moved to central controls
 const gameWonOverlay = document.getElementById('game-won-overlay');
 const playAgainOverlayBtn = document.getElementById('play-again-overlay-btn');
-const restartGameBtn = document.getElementById('restart-game-btn'); // General restart button in controls
+const restartGameBtn = document.getElementById('restart-game-btn'); // Remains in minimal sidebar
 
 const modal = document.getElementById('modal');
 const modalCloseBtn = document.getElementById('modal-close-btn');
@@ -105,8 +106,10 @@ function getTileGridPosition(tileId) {
  * Renders or updates the game board and player token.
  */
 function renderBoard() {
-    boardSection.innerHTML = ''; // Clear existing tiles
-    
+    // Clear existing tiles, but keep central-game-controls
+    const existingTiles = boardSection.querySelectorAll('.tile');
+    existingTiles.forEach(tile => tile.remove());
+
     boardSection.style.gridTemplateColumns = `repeat(${BOARD_EDGE_LENGTH}, minmax(0, 1fr))`;
     boardSection.style.gridTemplateRows = `repeat(${BOARD_EDGE_LENGTH}, minmax(0, 1fr))`;
 
@@ -133,7 +136,8 @@ function renderBoard() {
         tileElement.style.gridColumn = x + 1; // CSS grid is 1-indexed
         tileElement.style.gridRow = y + 1;
 
-        boardSection.appendChild(tileElement);
+        // Insert tiles before the central-game-controls and game-won-overlay
+        boardSection.insertBefore(tileElement, centralGameControls);
     });
 
     // Render player token
@@ -248,6 +252,7 @@ function handleRollDice() {
 
             if (gameWon) {
                 rollDiceBtn.disabled = true;
+                centralGameControls.classList.add('hidden'); // Hide central controls
                 gameWonOverlay.classList.remove('hidden'); // Show game won overlay
             }
         }
@@ -265,6 +270,7 @@ function restartGame() {
     lastRollDisplay.textContent = '';
     rollDiceBtn.disabled = false;
     rollDiceBtn.textContent = 'Roll Dice';
+    centralGameControls.classList.remove('hidden'); // Show central controls again
     gameWonOverlay.classList.add('hidden'); // Hide game won overlay
     closeModal();
     renderBoard(); // Re-render board to reset current tile highlighting and token
