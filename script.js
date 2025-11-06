@@ -30,7 +30,7 @@ const tilesData = [
     { id: 25, title: "Predictive Analytics", type: "fact", content: "AI uses historical data to predict future outcomes, like market trends or equipment failures." },
     { id: 26, title: "Anomaly Detection", type: "fact", content: "AI can identify unusual patterns or outliers in data, useful for fraud detection or system monitoring." },
     { id: 27, title: "Recommender Systems", type: "fact", content: "AI-powered recommender systems suggest products, movies, or content based on user preferences." },
-    { id: 28, title: "AI in Education", type: "fact", content: "AI personalizes learning experiences, automates grading, and provides intelligent tutoring systems."手間." },
+    { id: 28, title: "AI in Education", type: "fact", content: "AI personalizes learning experiences, automates grading, and provides intelligent tutoring systems." },
     { id: 29, title: "AI in Finance", type: "fact", content: "AI aids in algorithmic trading, fraud detection, risk assessment, and personalized financial advice." },
     { id: 30, title: "Transfer Learning", type: "fact", content: "Transfer learning reuses a pre-trained model on a new, related task, saving time and resources." }, // Corner 3
     { id: 31, title: "Data Augmentation", type: "fact", content: "Techniques to increase the amount of data by adding slightly modified copies of already existing data." },
@@ -61,7 +61,7 @@ const rollDiceBtn = document.getElementById('roll-dice-btn');
 const lastRollDisplay = document.getElementById('last-roll-display');
 const gameWonOverlay = document.getElementById('game-won-overlay');
 const playAgainOverlayBtn = document.getElementById('play-again-overlay-btn');
-const restartGameBtn = document.getElementById('restart-game-btn'); // Reverted to target the button inside central-game-controls
+const restartGameBtn = document.getElementById('restart-game-btn'); // Updated to target the new location
 
 const modal = document.getElementById('modal');
 const modalCloseBtn = document.getElementById('modal-close-btn');
@@ -288,7 +288,7 @@ rollDiceBtn.addEventListener('click', handleRollDice);
 modalCloseBtn.addEventListener('click', closeModal);
 modalContinueBtn.addEventListener('click', closeModal); // Continue button also closes modal
 playAgainOverlayBtn.addEventListener('click', restartGame); // For game won overlay
-restartGameBtn.addEventListener('click', restartGame); // For the button inside central-game-controls
+restartGameBtn.addEventListener('click', restartGame); // For the button next to the title
 
 // --- Initial Game Setup ---
 document.addEventListener('DOMContentLoaded', () => {
