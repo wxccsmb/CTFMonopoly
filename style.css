@@ -7,6 +7,11 @@
     padding: 0;
 }
 
+html, body { /* Explicitly set html and body to 100% height */
+    height: 100%;
+    overflow: hidden; /* Prevent scrolling on the body itself */
+}
+
 body {
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     -webkit-font-smoothing: antialiased;
@@ -21,7 +26,6 @@ body {
 .to-indigo-200 { --tw-gradient-to: #c7d2fe; }
 .flex { display: flex; }
 .flex-col { flex-direction: column; }
-/* Removed md:flex-row as game-container is now single column */
 .items-center { align-items: center; }
 .justify-center { justify-content: center; }
 .justify-between { justify-content: space-between; }
@@ -30,8 +34,8 @@ body {
 .p-8 { padding: 2rem; }
 .gap-8 { gap: 2rem; }
 .w-full { width: 100%; }
-.max-w-7xl { max-width: 80rem; } /* This corresponds to 1280px */
-.mx-auto { margin-left: auto; margin-right: auto; } /* Added for board-section centering */
+/* Removed max-w-7xl from here as it's now applied dynamically to the board */
+.mx-auto { margin-left: auto; margin-right: auto; }
 .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
 .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
 .text-2xl { font-size: 1.5rem; line-height: 2rem; }
@@ -131,15 +135,31 @@ body {
 .-translate-x-1\/2 { transform: translateX(-50%); }
 .-translate-y-1\/2 { transform: translateY(-50%); }
 
+/* New utility classes for responsive sizing */
+.h-full { height: 100%; }
+.flex-grow { flex-grow: 1; }
+.flex-shrink-0 { flex-shrink: 0; }
+.max-h-full { max-height: 100%; }
 
 /* Custom Board and Tile Styling */
 #board-section {
     display: grid;
-    /* Grid template columns/rows will be set by JS */
     gap: 2px; /* Small gap between tiles */
     width: 100%;
     aspect-ratio: 1 / 1; /* Keep board square */
+    /* Removed margin: 0 auto; as parent flexbox handles centering */
 }
+
+/* New class to dynamically size the board based on available space */
+.dynamic-board-size {
+    max-width: calc(100vh - 10rem); /* Max width based on viewport height minus header/padding */
+    max-height: calc(100vh - 10rem); /* Max height based on viewport height minus header/padding */
+    /* The 10rem is an estimate for header height + body padding. Adjust as needed. */
+    /* Using min(vw, vh) to make it fit both dimensions */
+    width: min(80vw, 80vh); /* Adjust 80vw/vh to control overall size relative to viewport */
+    height: min(80vw, 80vh);
+}
+
 
 .tile {
     position: relative;
@@ -233,10 +253,16 @@ body {
 }
 
 /* Responsive adjustments */
+/* No specific md:w- for board-section or controls-section anymore as controls-section is gone */
 @media (max-width: 767px) {
-    #game-container { flex-direction: column; }
-    #board-section { width: 100%; }
-}
-@media (min-width: 768px) {
-    #board-section { width: 100%; }
+    /* For smaller screens, allow body to scroll if content is too tall */
+    html, body {
+        overflow: auto;
+    }
+    .dynamic-board-size {
+        width: 90vw; /* Take up more width on small screens */
+        height: 90vw; /* Keep aspect ratio */
+        max-width: 100%;
+        max-height: 100%;
+    }
 }
