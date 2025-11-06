@@ -11,12 +11,23 @@
         AI for Everyone: The Game
     </h1>
 
-    <!-- Increased max-w-7xl for a larger overall game area -->
     <div id="game-container" class="w-full max-w-7xl flex flex-col md:flex-row gap-8 relative">
-        <!-- Board Section (now md:w-9/10) -->
-        <div id="board-section" class="md:w-9/10 relative p-4 bg-green-700 border-8 border-green-900 rounded-lg shadow-xl aspect-square">
+        <!-- Board Section (now md:w-5/6) -->
+        <div id="board-section" class="md:w-5/6 relative p-4 bg-green-700 border-8 border-green-900 rounded-lg shadow-xl aspect-square">
             <!-- Tiles will be injected here by JavaScript -->
             <!-- Player token will be injected here by JavaScript -->
+
+            <!-- Central Game Controls Overlay -->
+            <div id="central-game-controls" class="absolute inset-0 flex flex-col items-center justify-center z-10 p-4">
+                <p class="text-xl text-white mb-4 drop-shadow-lg">Current Tile: <span id="current-tile-info" class="font-bold">0 - Start (Go)</span></p>
+                
+                <div class="flex flex-col items-center p-4 bg-white bg-opacity-90 rounded-lg shadow-lg">
+                    <button id="roll-dice-btn" class="px-6 py-3 rounded-full text-white font-bold text-lg bg-blue-600 hover:bg-blue-700 active:scale-95 transition-all duration-300 ease-in-out w-full">
+                        Roll Dice
+                    </button>
+                    <p id="last-roll-display" class="mt-4 text-3xl font-extrabold text-gray-800"></p>
+                </div>
+            </div>
 
             <!-- Game Won Overlay (positioned over the board ONLY) -->
             <div id="game-won-overlay" class="hidden absolute inset-0 flex items-center justify-center bg-black bg-opacity-70 rounded-lg z-20">
@@ -34,25 +45,17 @@
             </div>
         </div>
 
-        <!-- Controls Section (now md:w-1/10) -->
-        <div id="controls-section" class="md:w-1/10 flex flex-col items-center justify-between p-6 bg-white rounded-lg shadow-lg">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Game Controls</h2>
-            <p class="text-lg text-gray-600 mb-6">Current Tile: <span id="current-tile-info" class="font-bold">0 - Start (Go)</span></p>
+        <!-- Controls Section (now md:w-1/6 - very minimal) -->
+        <div id="controls-section" class="md:w-1/6 flex flex-col items-center justify-start p-6 bg-white rounded-lg shadow-lg">
+            <h2 class="text-xl font-semibold text-gray-800 mb-8 text-center">Controls</h2>
             
-            <div class="flex flex-col items-center p-4 bg-gray-100 rounded-lg shadow-md w-full">
-                <button id="roll-dice-btn" class="px-6 py-3 rounded-full text-white font-bold text-lg bg-blue-600 hover:bg-blue-700 active:scale-95 transition-all duration-300 ease-in-out w-full">
-                    Roll Dice
-                </button>
-                <p id="last-roll-display" class="mt-4 text-3xl font-extrabold text-gray-800"></p>
-            </div>
-
-            <button id="restart-game-btn" class="mt-8 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors w-full">
+            <button id="restart-game-btn" class="mt-auto px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors w-full">
                 Restart Game
             </button>
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal (still centered on the entire screen) -->
     <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-lg p-6 shadow-xl max-w-md w-full relative transform transition-all duration-300 ease-out scale-100 opacity-100">
             <button id="modal-close-btn" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl font-bold">
