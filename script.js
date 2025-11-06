@@ -55,13 +55,13 @@ const BOARD_EDGE_LENGTH = 11; // 11 tiles per side, including corners
 
 // --- DOM Elements ---
 const boardSection = document.getElementById('board-section');
-const centralGameControls = document.getElementById('central-game-controls'); // New element
+const centralGameControls = document.getElementById('central-game-controls');
 const currentTileInfoDisplay = document.getElementById('current-tile-info');
 const rollDiceBtn = document.getElementById('roll-dice-btn');
 const lastRollDisplay = document.getElementById('last-roll-display');
 const gameWonOverlay = document.getElementById('game-won-overlay');
 const playAgainOverlayBtn = document.getElementById('play-again-overlay-btn');
-const restartGameBtn = document.getElementById('restart-game-btn'); // Now inside central-game-controls
+const restartGameBtn = document.getElementById('restart-game-btn'); // Updated to target the new location
 
 const modal = document.getElementById('modal');
 const modalCloseBtn = document.getElementById('modal-close-btn');
@@ -288,7 +288,7 @@ rollDiceBtn.addEventListener('click', handleRollDice);
 modalCloseBtn.addEventListener('click', closeModal);
 modalContinueBtn.addEventListener('click', closeModal); // Continue button also closes modal
 playAgainOverlayBtn.addEventListener('click', restartGame); // For game won overlay
-restartGameBtn.addEventListener('click', restartGame); // For general restart button in central controls
+restartGameBtn.addEventListener('click', restartGame); // For the button next to the title
 
 // --- Initial Game Setup ---
 document.addEventListener('DOMContentLoaded', () => {
