@@ -55,6 +55,7 @@ const BOARD_EDGE_LENGTH = 11; // 11 tiles per side, including corners
 
 // --- DOM Elements ---
 const boardSection = document.getElementById('board-section');
+const tilesWrapper = document.getElementById('tiles-wrapper'); // NEW: Get reference to the tiles wrapper
 const centralGameControls = document.getElementById('central-game-controls');
 const currentTileInfoDisplay = document.getElementById('current-tile-info');
 const rollDiceBtn = document.getElementById('roll-dice-btn');
@@ -99,12 +100,12 @@ function getTileGridPosition(tileId) {
  * Renders or updates the game board and player token.
  */
 function renderBoard() {
-    // Clear existing tiles
-    const existingTiles = boardSection.querySelectorAll('.tile');
-    existingTiles.forEach(tile => tile.remove());
+    // Clear only the tiles wrapper
+    tilesWrapper.innerHTML = '';
 
-    boardSection.style.gridTemplateColumns = `repeat(${BOARD_EDGE_LENGTH}, minmax(0, 1fr))`;
-    boardSection.style.gridTemplateRows = `repeat(${BOARD_EDGE_LENGTH}, minmax(0, 1fr))`;
+    // Apply grid styles to the tilesWrapper, not boardSection directly for tiles
+    tilesWrapper.style.gridTemplateColumns = `repeat(${BOARD_EDGE_LENGTH}, minmax(0, 1fr))`;
+    tilesWrapper.style.gridTemplateRows = `repeat(${BOARD_EDGE_LENGTH}, minmax(0, 1fr))`;
 
     tilesData.forEach(tileData => {
         const tileElement = document.createElement('div');
@@ -129,22 +130,18 @@ function renderBoard() {
         tileElement.style.gridColumn = x + 1; // CSS grid is 1-indexed
         tileElement.style.gridRow = y + 1;
 
-        // Insert tiles before the central-game-controls, game-won-overlay, and modal
-        // This ensures overlays are always on top
-        boardSection.insertBefore(tileElement, centralGameControls);
+        tilesWrapper.appendChild(tileElement); // Append tiles to the new wrapper
     });
 
-    // --- FIX START ---
     // Remove existing player token if it's still attached to the DOM
     if (playerToken && playerToken.parentNode === boardSection) {
         playerToken.remove();
     }
-    // Create a new player token element and append it
+    // Create a new player token element and append it directly to boardSection
     playerToken = document.createElement('div');
     playerToken.classList.add('player-token');
     playerToken.textContent = 'P';
     boardSection.appendChild(playerToken);
-    // --- FIX END ---
 
     updatePlayerTokenPosition();
     updateCurrentTileInfo();
@@ -156,6 +153,7 @@ function renderBoard() {
 function updatePlayerTokenPosition() {
     const currentTileElement = document.getElementById(`tile-${currentTileId}`);
     if (currentTileElement && playerToken) {
+        // Calculate the center of the current tile element relative to the board section
         const boardRect = boardSection.getBoundingClientRect();
         const tileRect = currentTileElement.getBoundingClientRect();
 
