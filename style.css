@@ -123,9 +123,11 @@ body {
 .top-3 { top: 0.75rem; }
 .right-3 { right: 0.75rem; }
 .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
-.z-10 { z-index: 10; }
-.z-20 { z-index: 20; }
-.z-30 { z-index: 30; }
+/* Adjusted z-index for player token */
+.z-10 { z-index: 10; } /* Central game controls */
+.z-15 { z-index: 15; } /* Player token */
+.z-20 { z-index: 20; } /* Game won overlay */
+.z-30 { z-index: 30; } /* Modal */
 .z-50 { z-index: 50; }
 .hidden { display: none; }
 .text-center { text-align: center; }
@@ -205,6 +207,7 @@ body {
 }
 
 .player-token {
+    position: absolute; /* Kept absolute positioning */
     background-color: var(--cisco-red); /* Red for player token, stands out */
     border-radius: 9999px;
     width: 24px;
@@ -216,7 +219,7 @@ body {
     font-size: 0.75rem;
     font-weight: 700;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    z-index: 10;
+    z-index: 15; /* Adjusted z-index to be higher than central-game-controls */
     transition: left 0.5s ease-in-out, top 0.5s ease-in-out;
 }
 
