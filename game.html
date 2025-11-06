@@ -12,10 +12,11 @@
     </h1>
 
     <div id="game-container" class="w-full max-w-7xl relative">
-        <div id="board-section" class="relative p-4 bg-green-700 border-8 border-green-900 rounded-lg shadow-xl aspect-square w-full mx-auto">
+        <!-- Removed p-4 from board-section -->
+        <div id="board-section" class="relative bg-green-700 border-8 border-green-900 rounded-lg shadow-xl aspect-square w-full mx-auto">
             
-            <!-- NEW: Dedicated container for tiles -->
-            <div id="tiles-wrapper" class="absolute inset-0 grid"></div> 
+            <!-- Added p-4 to tiles-wrapper -->
+            <div id="tiles-wrapper" class="absolute inset-0 grid p-4"></div> 
             
             <!-- Player token will be appended to board-section by JavaScript -->
 
