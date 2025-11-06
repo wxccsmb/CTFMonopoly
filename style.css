@@ -103,7 +103,7 @@ body {
 .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
 .z-10 { z-index: 10; }
 .z-20 { z-index: 20; }
-.z-30 { z-index: 30; } /* Increased z-index for the modal */
+.z-30 { z-index: 30; }
 .z-50 { z-index: 50; }
 .hidden { display: none; }
 .text-center { text-align: center; }
@@ -139,6 +139,7 @@ body {
 .tile {
     position: relative;
     display: flex;
+    flex-direction: column; /* Allow content to stack if needed */
     align-items: center;
     justify-content: center;
     border: 1px solid #d1d5db; /* border-gray-300 */
@@ -150,7 +151,15 @@ body {
     color: #1f2937; /* text-gray-800 */
     transition: all 300ms ease-in-out;
     aspect-ratio: 1 / 1; /* Ensures square aspect ratio */
+    overflow: hidden; /* Ensure nothing visually overflows the tile */
 }
+
+.tile p { /* Target the paragraph inside the tile */
+    word-break: break-word; /* Ensures long words break to fit */
+    max-height: 100%; /* Ensure text doesn't push beyond tile height */
+    overflow: hidden; /* Hide any overflow if text is too long even with wrapping */
+}
+
 
 .tile:hover {
     background-color: #f9fafb; /* hover:bg-gray-50 */
@@ -190,7 +199,6 @@ body {
 }
 
 /* Modal Specifics */
-/* Removed 'fixed' and added 'absolute' and increased z-index */
 #modal {
     position: absolute; /* Position relative to its parent (#board-section) */
     inset: 0; /* Cover the entire parent */
