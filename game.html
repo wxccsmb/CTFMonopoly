@@ -12,13 +12,9 @@
     </h1>
 
     <div id="game-container" class="w-full max-w-7xl relative">
-        <!-- Removed p-4 from board-section -->
-        <div id="board-section" class="relative bg-green-700 border-8 border-green-900 rounded-lg shadow-xl aspect-square w-full mx-auto">
-            
-            <!-- Added p-4 to tiles-wrapper -->
-            <div id="tiles-wrapper" class="absolute inset-0 grid p-4"></div> 
-            
-            <!-- Player token will be appended to board-section by JavaScript -->
+        <div id="board-section" class="relative p-4 bg-green-700 border-8 border-green-900 rounded-lg shadow-xl aspect-square w-full mx-auto">
+            <!-- Tiles will be injected here by JavaScript -->
+            <!-- Player token will be injected here by JavaScript -->
 
             <!-- Central Game Controls (dice, current tile, restart) -->
             <div id="central-game-controls" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center z-10 p-4">
@@ -29,6 +25,7 @@
                         Roll Dice
                     </button>
                     <p id="last-roll-display" class="mt-4 text-3xl font-extrabold text-gray-800"></p>
+                    <!-- Restart Game button is here -->
                     <button id="restart-game-btn" class="mt-8 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors w-full">
                         Restart Game
                     </button>
