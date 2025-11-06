@@ -56,12 +56,12 @@ const BOARD_EDGE_LENGTH = 11; // 11 tiles per side, including corners
 // --- DOM Elements ---
 const boardSection = document.getElementById('board-section');
 const centralGameControls = document.getElementById('central-game-controls'); // New element
-const currentTileInfoDisplay = document.getElementById('current-tile-info'); // Moved to central controls
-const rollDiceBtn = document.getElementById('roll-dice-btn'); // Moved to central controls
-const lastRollDisplay = document.getElementById('last-roll-display'); // Moved to central controls
+const currentTileInfoDisplay = document.getElementById('current-tile-info');
+const rollDiceBtn = document.getElementById('roll-dice-btn');
+const lastRollDisplay = document.getElementById('last-roll-display');
 const gameWonOverlay = document.getElementById('game-won-overlay');
 const playAgainOverlayBtn = document.getElementById('play-again-overlay-btn');
-const restartGameBtn = document.getElementById('restart-game-btn'); // Remains in minimal sidebar
+const restartGameBtn = document.getElementById('restart-game-btn'); // Now inside central-game-controls
 
 const modal = document.getElementById('modal');
 const modalCloseBtn = document.getElementById('modal-close-btn');
@@ -106,7 +106,7 @@ function getTileGridPosition(tileId) {
  * Renders or updates the game board and player token.
  */
 function renderBoard() {
-    // Clear existing tiles, but keep central-game-controls
+    // Clear existing tiles, but keep central-game-controls, game-won-overlay, and modal
     const existingTiles = boardSection.querySelectorAll('.tile');
     existingTiles.forEach(tile => tile.remove());
 
@@ -136,7 +136,8 @@ function renderBoard() {
         tileElement.style.gridColumn = x + 1; // CSS grid is 1-indexed
         tileElement.style.gridRow = y + 1;
 
-        // Insert tiles before the central-game-controls and game-won-overlay
+        // Insert tiles before the central-game-controls, game-won-overlay, and modal
+        // This ensures overlays are always on top
         boardSection.insertBefore(tileElement, centralGameControls);
     });
 
@@ -192,6 +193,7 @@ function showModal(content) {
     }
     modal.classList.remove('hidden');
     rollDiceBtn.disabled = true; // Disable dice roll while modal is open
+    restartGameBtn.disabled = true; // Disable restart while modal is open
     modalContinueBtn.focus(); // Focus continue button for accessibility
 }
 
@@ -201,6 +203,7 @@ function showModal(content) {
 function closeModal() {
     modal.classList.add('hidden');
     rollDiceBtn.disabled = isRolling; // Re-enable dice roll if not currently rolling
+    restartGameBtn.disabled = false; // Re-enable restart button
 }
 
 /**
@@ -211,6 +214,7 @@ function handleRollDice() {
 
     isRolling = true;
     rollDiceBtn.disabled = true;
+    restartGameBtn.disabled = true; // Disable restart during roll
     rollDiceBtn.textContent = 'Rolling...';
     lastRollDisplay.textContent = ''; // Clear previous roll
 
@@ -249,9 +253,11 @@ function handleRollDice() {
             
             isRolling = false;
             rollDiceBtn.textContent = 'Roll Dice';
+            restartGameBtn.disabled = false; // Re-enable restart after roll
 
             if (gameWon) {
                 rollDiceBtn.disabled = true;
+                restartGameBtn.disabled = true; // Keep disabled if game is won
                 centralGameControls.classList.add('hidden'); // Hide central controls
                 gameWonOverlay.classList.remove('hidden'); // Show game won overlay
             }
@@ -270,6 +276,7 @@ function restartGame() {
     lastRollDisplay.textContent = '';
     rollDiceBtn.disabled = false;
     rollDiceBtn.textContent = 'Roll Dice';
+    restartGameBtn.disabled = false; // Ensure restart button is enabled
     centralGameControls.classList.remove('hidden'); // Show central controls again
     gameWonOverlay.classList.add('hidden'); // Hide game won overlay
     closeModal();
@@ -281,7 +288,7 @@ rollDiceBtn.addEventListener('click', handleRollDice);
 modalCloseBtn.addEventListener('click', closeModal);
 modalContinueBtn.addEventListener('click', closeModal); // Continue button also closes modal
 playAgainOverlayBtn.addEventListener('click', restartGame); // For game won overlay
-restartGameBtn.addEventListener('click', restartGame); // For general restart button in controls
+restartGameBtn.addEventListener('click', restartGame); // For general restart button in central controls
 
 // --- Initial Game Setup ---
 document.addEventListener('DOMContentLoaded', () => {
