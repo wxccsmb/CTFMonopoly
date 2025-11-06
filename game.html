@@ -1,32 +1,25 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full"> <!-- Added h-full here -->
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI for Everyone: The Game</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="h-full min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 flex flex-col items-center justify-center p-4">
-    <!-- Title and Restart Button Section -->
-    <div class="flex flex-col items-center mb-4 flex-shrink-0"> <!-- Reduced mb-8 to mb-4, added flex-shrink-0 -->
-        <h1 class="text-4xl font-extrabold text-blue-800 drop-shadow-md text-center mb-4">
-            AI for Everyone: The Game
-        </h1>
-        <button id="restart-game-btn" class="px-6 py-3 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors">
-            Restart Game
-        </button>
-    </div>
+<body class="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 flex flex-col items-center justify-center p-4">
+    <h1 class="text-4xl font-extrabold text-blue-800 mb-8 drop-shadow-md text-center">
+        AI for Everyone: The Game
+    </h1>
 
-    <!-- Main Game Container -->
-    <!-- Removed max-w-7xl, added flex-grow, max-w-full, max-h-full -->
-    <div id="game-container" class="w-full flex-grow relative max-w-full max-h-full flex items-center justify-center">
-        <!-- Board Section -->
-        <!-- Added dynamic-board-size class to manage max-width/height -->
-        <div id="board-section" class="relative p-4 bg-green-700 border-8 border-green-900 rounded-lg shadow-xl aspect-square dynamic-board-size">
-            <!-- Tiles will be injected here by JavaScript -->
-            <!-- Player token will be injected here by JavaScript -->
+    <div id="game-container" class="w-full max-w-7xl relative">
+        <div id="board-section" class="relative p-4 bg-green-700 border-8 border-green-900 rounded-lg shadow-xl aspect-square w-full mx-auto">
+            
+            <!-- NEW: Dedicated container for tiles -->
+            <div id="tiles-wrapper" class="absolute inset-0 grid"></div> 
+            
+            <!-- Player token will be appended to board-section by JavaScript -->
 
-            <!-- Central Game Controls -->
+            <!-- Central Game Controls (dice, current tile, restart) -->
             <div id="central-game-controls" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center z-10 p-4">
                 <p class="text-xl text-white mb-4 drop-shadow-lg">Current Tile: <span id="current-tile-info" class="font-bold">0 - Start (Go)</span></p>
                 
@@ -35,10 +28,13 @@
                         Roll Dice
                     </button>
                     <p id="last-roll-display" class="mt-4 text-3xl font-extrabold text-gray-800"></p>
+                    <button id="restart-game-btn" class="mt-8 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors w-full">
+                        Restart Game
+                    </button>
                 </div>
             </div>
 
-            <!-- Game Won Overlay -->
+            <!-- Game Won Overlay (positioned over the board ONLY) -->
             <div id="game-won-overlay" class="hidden absolute inset-0 flex items-center justify-center bg-black bg-opacity-70 rounded-lg z-20">
                 <div class="text-center p-8 bg-white rounded-lg shadow-2xl max-w-md">
                     <p class="text-4xl font-extrabold text-green-600 mb-4 animate-pulse">
@@ -53,7 +49,7 @@
                 </div>
             </div>
 
-            <!-- Modal -->
+            <!-- Modal (still centered on the entire board) -->
             <div id="modal" class="hidden absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-30">
                 <div class="bg-white rounded-lg p-6 shadow-xl max-w-md w-full relative transform transition-all duration-300 ease-out scale-100 opacity-100">
                     <button id="modal-close-btn" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl font-bold">
