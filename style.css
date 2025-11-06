@@ -7,6 +7,7 @@
     padding: 0;
 }
 
+/* Reverted html, body height and overflow */
 body {
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     -webkit-font-smoothing: antialiased;
@@ -21,6 +22,7 @@ body {
 .to-indigo-200 { --tw-gradient-to: #c7d2fe; }
 .flex { display: flex; }
 .flex-col { flex-direction: column; }
+/* Reverted game-container to not be flex-row */
 .items-center { align-items: center; }
 .justify-center { justify-content: center; }
 .justify-between { justify-content: space-between; }
@@ -30,7 +32,7 @@ body {
 .gap-8 { gap: 2rem; }
 .w-full { width: 100%; }
 .max-w-7xl { max-width: 80rem; } /* This corresponds to 1280px */
-.mx-auto { margin-left: auto; margin-right: auto; }
+.mx-auto { margin-left: auto; margin-right: auto; } /* Added for board-section centering */
 .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
 .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
 .text-2xl { font-size: 1.5rem; line-height: 2rem; }
@@ -67,7 +69,7 @@ body {
 .hover\:bg-red-600:hover { background-color: #dc2626; }
 .bg-gray-100 { background-color: #f3f4f6; }
 .bg-white { background-color: #fff; }
-.bg-black { background-color: rgba(0, 0, 0, 0.8); } /* Slightly darker overlay */
+.bg-black { background-color: #000; }
 .bg-opacity-50 { opacity: 0.5; }
 .bg-opacity-70 { opacity: 0.7; }
 .bg-opacity-90 { opacity: 0.9; }
@@ -81,7 +83,7 @@ body {
 .drop-shadow-md { filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06)); }
 .drop-shadow-lg { filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1)); }
 .border-8 { border-width: 8px; }
-.border-green-900 { border-color: #064e3b; } /* Reverted to original green */
+.border-green-900 { border-color: #064e3b; }
 .border { border-width: 1px; }
 .border-gray-300 { border-color: #d1d5db; }
 .border-blue-500 { border-color: #3b82f6; }
@@ -102,11 +104,9 @@ body {
 .top-3 { top: 0.75rem; }
 .right-3 { right: 0.75rem; }
 .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
-/* Adjusted z-index for player token */
-.z-10 { z-index: 10; } /* Central game controls */
-.z-15 { z-index: 15; } /* Player token */
-.z-20 { z-index: 20; } /* Game won overlay */
-.z-30 { z-index: 30; } /* Modal */
+.z-10 { z-index: 10; }
+.z-20 { z-index: 20; }
+.z-30 { z-index: 30; }
 .z-50 { z-index: 50; }
 .hidden { display: none; }
 .text-center { text-align: center; }
@@ -132,50 +132,41 @@ body {
 .-translate-x-1\/2 { transform: translateX(-50%); }
 .-translate-y-1\/2 { transform: translateY(-50%); }
 
+/* Removed new utility classes for responsive sizing */
+/* Removed dynamic-board-size class and related styles */
 
 /* Custom Board and Tile Styling */
 #board-section {
-    display: grid; /* board-section itself is now a grid container for its direct children (tiles-wrapper, overlays) */
-    aspect-ratio: 1 / 1; /* Keep board square */
-}
-
-/* Style for the tiles wrapper */
-#tiles-wrapper {
-    /* Inherits absolute inset-0 grid p-4 from HTML */
-    background-color: transparent; /* Ensure board background is visible */
-    z-index: 0; /* Ensure tiles are at the bottom layer */
-}
-
-/* Apply grid properties to the tiles-wrapper for the actual tiles */
-#tiles-wrapper.grid {
     display: grid;
     gap: 2px; /* Small gap between tiles */
+    width: 100%;
+    aspect-ratio: 1 / 1; /* Keep board square */
 }
-
 
 .tile {
     position: relative;
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Allow content to stack if needed */
     align-items: center;
     justify-content: center;
     border: 1px solid #d1d5db; /* border-gray-300 */
     background-color: #fff; /* bg-white */
-    padding: 0.5rem;
+    padding: 0.5rem; /* p-2 */
     text-align: center;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.75rem; /* text-xs */
+    font-weight: 600; /* font-semibold */
     color: #1f2937; /* text-gray-800 */
     transition: all 300ms ease-in-out;
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
+    aspect-ratio: 1 / 1; /* Ensures square aspect ratio */
+    overflow: hidden; /* Ensure nothing visually overflows the tile */
 }
 
-.tile p {
-    word-break: break-word;
-    max-height: 100%;
-    overflow: hidden;
+.tile p { /* Target the paragraph inside the tile */
+    word-break: break-word; /* Ensures long words break to fit */
+    max-height: 100%; /* Ensure text doesn't push beyond tile height */
+    overflow: hidden; /* Hide any overflow if text is too long even with wrapping */
 }
+
 
 .tile:hover {
     background-color: #f9fafb; /* hover:bg-gray-50 */
@@ -184,46 +175,46 @@ body {
 .tile.current {
     background-color: #bfdbfe; /* bg-blue-200 */
     border-color: #3b82f6; /* border-blue-500 */
-    transform: scale(1.05);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    z-index: 1;
+    transform: scale(1.05); /* scale-105 */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+    z-index: 1; /* Ensure current tile is above others for visual effect */
 }
 
 .tile-id {
     position: absolute;
-    top: 0.25rem;
-    left: 0.25rem;
+    top: 0.25rem; /* top-1 */
+    left: 0.25rem; /* left-1 */
     color: #6b7280; /* text-gray-500 */
-    font-size: 0.6rem;
+    font-size: 0.6rem; /* text-[0.6rem] */
 }
 
 .player-token {
-    position: absolute; /* Kept absolute positioning */
+    position: absolute;
     background-color: #ef4444; /* bg-red-500 */
-    border-radius: 9999px;
-    width: 24px;
-    height: 24px;
+    border-radius: 9999px; /* rounded-full */
+    width: 24px; /* w-6 */
+    height: 24px; /* h-6 */
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff; /* text-white */
-    font-size: 0.75rem;
-    font-weight: 700;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    z-index: 15; /* Adjusted z-index to be higher than central-game-controls */
-    transition: left 0.5s ease-in-out, top 0.5s ease-in-out;
+    font-size: 0.75rem; /* text-xs */
+    font-weight: 700; /* font-bold */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+    z-index: 10;
+    transition: left 0.5s ease-in-out, top 0.5s ease-in-out; /* Smooth movement */
 }
 
 /* Modal Specifics */
 #modal {
-    position: absolute;
-    inset: 0;
+    position: absolute; /* Position relative to its parent (#board-section) */
+    inset: 0; /* Cover the entire parent */
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.5); /* bg-black bg-opacity-50 */
-    padding: 1rem;
-    z-index: 30;
+    padding: 1rem; /* p-4 */
+    z-index: 30; /* Higher than player token (10) and game-won-overlay (20) */
     transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
 }
 #modal:not(.hidden) {
@@ -235,19 +226,12 @@ body {
     visibility: hidden;
 }
 
-#modal > div {
-    background-color: #fff; /* White modal background */
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    max-width: 28rem; /* max-w-md */
-    width: 100%;
-    position: relative;
+#modal > div { /* The actual modal content box */
     transform: scale(1);
     transition: transform 0.3s ease-out;
 }
 #modal.hidden > div {
-    transform: scale(0.95);
+    transform: scale(0.95); /* Slightly scale down when hidden */
 }
 
 /* Responsive adjustments */
