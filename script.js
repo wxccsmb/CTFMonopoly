@@ -32,7 +32,7 @@ const tilesData = [
     { id: 27, title: "Recommender Systems", type: "fact", content: "AI-powered recommender systems suggest products, movies, or content based on user preferences." },
     { id: 28, title: "AI in Education", type: "fact", content: "AI personalizes learning experiences, automates grading, and provides intelligent tutoring systems." },
     { id: 29, title: "AI in Finance", type: "fact", content: "AI aids in algorithmic trading, fraud detection, risk assessment, and personalized financial advice." },
-    { id: 30, title: "Transfer Learning", type: "fact", content: "Transfer learning reuses a pre-trained model on a new, related task, saving time and resources." }, // Corner 3
+    { id: 30, "title": "Transfer Learning", "type": "fact", "content": "Transfer learning reuses a pre-trained model on a new, related task, saving time and resources." }, // Corner 3
     { id: 31, title: "Data Augmentation", type: "fact", content: "Techniques to increase the amount of data by adding slightly modified copies of already existing data." },
     { id: 32, title: "Overfitting", type: "question", content: "What is overfitting in machine learning and how can it be mitigated?", link: "https://www.cisco.com/c/en/us/solutions/artificial-intelligence/what-is-overfitting.html" },
     { id: 33, title: "Underfitting", type: "fact", content: "Underfitting occurs when a model is too simple to capture the underlying patterns in the data." },
@@ -61,14 +61,7 @@ const rollDiceBtn = document.getElementById('roll-dice-btn');
 const lastRollDisplay = document.getElementById('last-roll-display');
 const gameWonOverlay = document.getElementById('game-won-overlay');
 const playAgainOverlayBtn = document.getElementById('play-again-overlay-btn');
-const restartGameBtn = document.getElementById('restart-game-btn'); // Updated to target the new location
-
-const modal = document.getElementById('modal');
-const modalCloseBtn = document.getElementById('modal-close-btn');
-const modalContinueBtn = document.getElementById('modal-continue-btn');
-const modalTitle = document.getElementById('modal-title');
-const modalContent = document.getElementById('modal-content');
-const modalLink = document.getElementById('modal-link');
+const restartGameBtn = document.getElementById('restart-game-btn');
 
 let playerToken; // Will be created dynamically
 
@@ -106,7 +99,7 @@ function getTileGridPosition(tileId) {
  * Renders or updates the game board and player token.
  */
 function renderBoard() {
-    // Clear existing tiles, but keep central-game-controls, game-won-overlay, and modal
+    // Clear existing tiles
     const existingTiles = boardSection.querySelectorAll('.tile');
     existingTiles.forEach(tile => tile.remove());
 
@@ -141,13 +134,18 @@ function renderBoard() {
         boardSection.insertBefore(tileElement, centralGameControls);
     });
 
-    // Render player token
-    if (!playerToken) {
-        playerToken = document.createElement('div');
-        playerToken.classList.add('player-token');
-        playerToken.textContent = 'P';
-        boardSection.appendChild(playerToken);
+    // --- FIX START ---
+    // Remove existing player token if it's still attached to the DOM
+    if (playerToken && playerToken.parentNode === boardSection) {
+        playerToken.remove();
     }
+    // Create a new player token element and append it
+    playerToken = document.createElement('div');
+    playerToken.classList.add('player-token');
+    playerToken.textContent = 'P';
+    boardSection.appendChild(playerToken);
+    // --- FIX END ---
+
     updatePlayerTokenPosition();
     updateCurrentTileInfo();
 }
@@ -158,7 +156,6 @@ function renderBoard() {
 function updatePlayerTokenPosition() {
     const currentTileElement = document.getElementById(`tile-${currentTileId}`);
     if (currentTileElement && playerToken) {
-        // Calculate the center of the current tile element relative to the board section
         const boardRect = boardSection.getBoundingClientRect();
         const tileRect = currentTileElement.getBoundingClientRect();
 
@@ -288,7 +285,7 @@ rollDiceBtn.addEventListener('click', handleRollDice);
 modalCloseBtn.addEventListener('click', closeModal);
 modalContinueBtn.addEventListener('click', closeModal); // Continue button also closes modal
 playAgainOverlayBtn.addEventListener('click', restartGame); // For game won overlay
-restartGameBtn.addEventListener('click', restartGame); // For the button next to the title
+restartGameBtn.addEventListener('click', restartGame); // For the button inside central-game-controls
 
 // --- Initial Game Setup ---
 document.addEventListener('DOMContentLoaded', () => {
