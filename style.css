@@ -1,18 +1,5 @@
 /* style.css */
 
-/* Cisco-inspired Color Palette */
-:root {
-    --cisco-blue-dark: #004B6C; /* Darker Blue for borders, main accents */
-    --cisco-blue-medium: #0073B7; /* Classic Cisco Blue */
-    --cisco-blue-light: #E0F2F7; /* Very Light Blue for tile backgrounds */
-    --cisco-gray-dark: #333333; /* Dark text */
-    --cisco-gray-medium: #666666; /* Medium text */
-    --cisco-gray-light: #F0F0F0; /* Light background elements */
-    --cisco-green: #28A745; /* Success/Congratulations */
-    --cisco-red: #DC3545; /* Danger/Restart */
-    --cisco-white: #FFFFFF;
-}
-
 /* Basic Reset & Box Sizing */
 *, *::before, *::after {
     box-sizing: border-box;
@@ -21,20 +8,17 @@
 }
 
 body {
-    font-family: 'CiscoSans', 'Helvetica Neue', Helvetica, Arial, sans-serif; /* Prioritize a Cisco-like font */
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     line-height: 1.5;
-    color: var(--cisco-gray-dark); /* Default text color */
 }
 
 /* Tailwind-like Utility Classes (mimicked) */
 .min-h-screen { min-height: 100vh; }
 .bg-gradient-to-br { background-image: linear-gradient(to bottom right, var(--tw-gradient-stops)); }
-/* Updated background gradient colors */
-.from-blue-100 { --tw-gradient-from: #EBF4F8; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(235, 244, 248, 0)); }
-.to-indigo-200 { --tw-gradient-to: #D8EBF3; }
-
+.from-blue-100 { --tw-gradient-from: #dbeafe; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(219, 234, 254, 0)); }
+.to-indigo-200 { --tw-gradient-to: #c7d2fe; }
 .flex { display: flex; }
 .flex-col { flex-direction: column; }
 .items-center { align-items: center; }
@@ -45,7 +29,7 @@ body {
 .p-8 { padding: 2rem; }
 .gap-8 { gap: 2rem; }
 .w-full { width: 100%; }
-.max-w-7xl { max-width: 80rem; }
+.max-w-7xl { max-width: 80rem; } /* This corresponds to 1280px */
 .mx-auto { margin-left: auto; margin-right: auto; }
 .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
 .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
@@ -65,27 +49,24 @@ body {
 .mt-6 { margin-top: 1.5rem; }
 .mt-4 { margin-top: 1rem; }
 .mt-2 { margin-top: 0.5rem; }
-/* Updated text colors */
-.text-blue-800 { color: var(--cisco-blue-dark); }
-.text-blue-700 { color: var(--cisco-blue-medium); }
-.text-blue-600 { color: var(--cisco-blue-medium); }
-.text-blue-500 { color: var(--cisco-blue-medium); }
-.text-green-600 { color: var(--cisco-green); }
-.text-gray-800 { color: var(--cisco-gray-dark); }
-.text-gray-700 { color: var(--cisco-gray-medium); }
-.text-gray-600 { color: var(--cisco-gray-medium); }
-.text-gray-500 { color: var(--cisco-gray-medium); }
-.text-white { color: var(--cisco-white); }
-
-/* Updated button colors */
-.bg-blue-600 { background-color: var(--cisco-blue-medium); }
-.hover\:bg-blue-700:hover { background-color: var(--cisco-blue-dark); }
-.bg-purple-600 { background-color: var(--cisco-blue-dark); } /* Using dark blue for play again */
-.hover\:bg-purple-700:hover { background-color: var(--cisco-blue-medium); }
-.bg-red-500 { background-color: var(--cisco-red); }
-.hover\:bg-red-600:hover { background-color: #C82333; } /* Darker red */
-.bg-gray-100 { background-color: var(--cisco-gray-light); }
-.bg-white { background-color: var(--cisco-white); }
+.text-blue-800 { color: #1e40af; }
+.text-blue-700 { color: #1d4ed8; }
+.text-blue-600 { color: #2563eb; }
+.text-blue-500 { color: #3b82f6; }
+.text-green-600 { color: #16a34a; }
+.text-gray-800 { color: #1f2937; }
+.text-gray-700 { color: #374151; }
+.text-gray-600 { color: #4b5563; }
+.text-gray-500 { color: #6b7280; }
+.text-white { color: #fff; }
+.bg-blue-600 { background-color: #2563eb; }
+.hover\:bg-blue-700:hover { background-color: #1d4ed8; }
+.bg-purple-600 { background-color: #9333ea; }
+.hover\:bg-purple-700:hover { background-color: #7e22ce; }
+.bg-red-500 { background-color: #ef4444; }
+.hover\:bg-red-600:hover { background-color: #dc2626; }
+.bg-gray-100 { background-color: #f3f4f6; }
+.bg-white { background-color: #fff; }
 .bg-black { background-color: rgba(0, 0, 0, 0.8); } /* Slightly darker overlay */
 .bg-opacity-50 { opacity: 0.5; }
 .bg-opacity-70 { opacity: 0.7; }
@@ -99,15 +80,13 @@ body {
 .shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
 .drop-shadow-md { filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06)); }
 .drop-shadow-lg { filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1)); }
-
-/* Updated board border color */
 .border-8 { border-width: 8px; }
-.border-green-900 { border-color: var(--cisco-blue-dark); } /* Board border is dark blue */
+.border-green-900 { border-color: #064e3b; } /* Reverted to original green */
 .border { border-width: 1px; }
-.border-gray-300 { border-color: var(--cisco-gray-light); }
-.border-blue-500 { border-color: var(--cisco-blue-medium); }
-.hover\:bg-gray-50:hover { background-color: var(--cisco-blue-light); } /* Hover effect on tiles */
-.bg-blue-200 { background-color: var(--cisco-blue-light); } /* Current tile background */
+.border-gray-300 { border-color: #d1d5db; }
+.border-blue-500 { border-color: #3b82f6; }
+.hover\:bg-gray-50:hover { background-color: #f9fafb; }
+.bg-blue-200 { background-color: #bfdbfe; }
 .cursor-not-allowed { cursor: not-allowed; }
 .transition-all { transition-property: all; }
 .transition-colors { transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter; }
@@ -157,12 +136,10 @@ body {
 /* Custom Board and Tile Styling */
 #board-section {
     display: grid; /* board-section itself is now a grid container for its direct children (tiles-wrapper, overlays) */
-    /* Removed gap: 2px; from board-section */
-    /* Removed width: 100%; as tiles-wrapper will handle it */
     aspect-ratio: 1 / 1; /* Keep board square */
 }
 
-/* NEW: Style for the tiles wrapper */
+/* Style for the tiles wrapper */
 #tiles-wrapper {
     /* Inherits absolute inset-0 grid p-4 from HTML */
     background-color: transparent; /* Ensure board background is visible */
@@ -182,13 +159,13 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border: 1px solid var(--cisco-gray-light); /* Light gray border */
-    background-color: var(--cisco-white); /* White background */
+    border: 1px solid #d1d5db; /* border-gray-300 */
+    background-color: #fff; /* bg-white */
     padding: 0.5rem;
     text-align: center;
     font-size: 0.75rem;
     font-weight: 600;
-    color: var(--cisco-gray-dark); /* Dark gray text */
+    color: #1f2937; /* text-gray-800 */
     transition: all 300ms ease-in-out;
     aspect-ratio: 1 / 1;
     overflow: hidden;
@@ -201,12 +178,12 @@ body {
 }
 
 .tile:hover {
-    background-color: var(--cisco-blue-light); /* Light blue on hover */
+    background-color: #f9fafb; /* hover:bg-gray-50 */
 }
 
 .tile.current {
-    background-color: var(--cisco-blue-light); /* Light blue for current tile */
-    border-color: var(--cisco-blue-medium); /* Medium blue border for current tile */
+    background-color: #bfdbfe; /* bg-blue-200 */
+    border-color: #3b82f6; /* border-blue-500 */
     transform: scale(1.05);
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     z-index: 1;
@@ -216,20 +193,20 @@ body {
     position: absolute;
     top: 0.25rem;
     left: 0.25rem;
-    color: var(--cisco-gray-medium); /* Medium gray for tile ID */
+    color: #6b7280; /* text-gray-500 */
     font-size: 0.6rem;
 }
 
 .player-token {
     position: absolute; /* Kept absolute positioning */
-    background-color: var(--cisco-red); /* Red for player token, stands out */
+    background-color: #ef4444; /* bg-red-500 */
     border-radius: 9999px;
     width: 24px;
     height: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--cisco-white);
+    color: #fff; /* text-white */
     font-size: 0.75rem;
     font-weight: 700;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -244,7 +221,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.6); /* Slightly darker overlay */
+    background-color: rgba(0, 0, 0, 0.5); /* bg-black bg-opacity-50 */
     padding: 1rem;
     z-index: 30;
     transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
@@ -259,7 +236,7 @@ body {
 }
 
 #modal > div {
-    background-color: var(--cisco-white); /* White modal background */
+    background-color: #fff; /* White modal background */
     border-radius: 0.5rem;
     padding: 1.5rem;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
