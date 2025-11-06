@@ -7,17 +7,23 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 flex flex-col items-center justify-center p-4">
-    <h1 class="text-4xl font-extrabold text-blue-800 mb-8 drop-shadow-md text-center">
-        AI for Everyone: The Game
-    </h1>
+    <!-- New container for title and restart button -->
+    <div class="flex flex-col items-center mb-8">
+        <h1 class="text-4xl font-extrabold text-blue-800 drop-shadow-md text-center mb-4">
+            AI for Everyone: The Game
+        </h1>
+        <!-- Restart Game button moved here -->
+        <button id="restart-game-btn" class="px-6 py-3 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors">
+            Restart Game
+        </button>
+    </div>
 
-    <!-- game-container now just holds the board, no longer needs flex-row -->
     <div id="game-container" class="w-full max-w-7xl relative">
         <div id="board-section" class="relative p-4 bg-green-700 border-8 border-green-900 rounded-lg shadow-xl aspect-square w-full mx-auto">
             <!-- Tiles will be injected here by JavaScript -->
             <!-- Player token will be injected here by JavaScript -->
 
-            <!-- Central Game Controls (dice, current tile, restart) -->
+            <!-- Central Game Controls (now only dice and current tile info) -->
             <div id="central-game-controls" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center z-10 p-4">
                 <p class="text-xl text-white mb-4 drop-shadow-lg">Current Tile: <span id="current-tile-info" class="font-bold">0 - Start (Go)</span></p>
                 
@@ -26,9 +32,7 @@
                         Roll Dice
                     </button>
                     <p id="last-roll-display" class="mt-4 text-3xl font-extrabold text-gray-800"></p>
-                    <button id="restart-game-btn" class="mt-8 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors w-full">
-                        Restart Game
-                    </button>
+                    <!-- Restart Game button removed from here -->
                 </div>
             </div>
 
@@ -65,6 +69,8 @@
             </div>
         </div>
     </div>
+
+    <!-- The old controls-section is now completely removed -->
 
     <script src="script.js"></script>
 </body>
